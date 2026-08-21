@@ -70,10 +70,14 @@ const artists = [
   { name: "Blake Whiten", genre: "Country", tags: ["Singer-songwriter"], initials: "BW" },
   { name: "World’s First Cinema", genre: "Rock & Alternative", tags: ["Cinematic rock", "Alternative pop"], initials: "WF" },
   { name: "Brett Young", genre: "Country", tags: ["Country pop"], initials: "BY" },
+  { name: "Brett Eldredge", genre: "Country", tags: ["Country pop"], initials: "BE" },
   { name: "Bailey Zimmerman", genre: "Country", tags: ["Country rock"], initials: "BZ" },
   { name: "Alana Springsteen", genre: "Country", tags: ["Country pop", "Singer-songwriter"], initials: "AS" },
   { name: "MaRynn Taylor", genre: "Country", tags: ["Country pop", "Singer-songwriter"], initials: "MT" },
   { name: "Adam Doleac", genre: "Country", tags: ["Country pop", "Singer-songwriter"], initials: "AD" },
+  { name: "Loveless", genre: "Rock & Alternative", tags: ["Pop punk", "Alternative rock"], initials: "LO" },
+  { name: "Taylor Bennett", genre: "R&B & Hip-Hop", tags: ["Alternative hip-hop", "Rap"], initials: "TB" },
+  { name: "Cousin Stizz", genre: "R&B & Hip-Hop", tags: ["Hip-hop", "Trap"], initials: "CS" },
 ];
 const colors = {
   Country: "#ffca3a", Pop: "#ff5ea0", "Indie & Folk": "#7bdff2",
@@ -286,9 +290,9 @@ const concerts = [
   },
   {
     artist: "Dustin Lynch", attendedBy: "N",
-    remembered: { approximateYearSeason: "", venue: "Gilford Pavilion", cityArea: "Gilford", stateCountry: "NH", otherClues: "" },
-    confirmed: { exactDate: "2017-08-08", venue: "Bank of New Hampshire Pavilion", city: "Gilford", stateCountry: "NH" },
-    research: { status: "Confirmed", sourceUrl: "https://banknhpavilion.com/?d=about&page=history", notes: "Venue name standardized from the remembered Gilford Pavilion name." },
+    remembered: { approximateYearSeason: "", venue: "Gillette Stadium", cityArea: "Foxborough", stateCountry: "MA", otherClues: "Luke Bryan opener" },
+    confirmed: { exactDate: "2016-07-16", venue: "Gillette Stadium", city: "Foxborough", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "https://www.patriots.com/news/4-patriots-moments-from-the-kill-the-lights-tour-at-gillette-stadium-265156", notes: "Confirmed as an opener for Luke Bryan with Little Big Town and Chris Stapleton." },
   },
   {
     artist: "Maddie & Tae", attendedBy: "L",
@@ -466,9 +470,9 @@ const concerts = [
   },
   {
     artist: "Keith Urban", attendedBy: "N",
-    remembered: { approximateYearSeason: "", venue: "Gilford Pavilion", cityArea: "Gilford", stateCountry: "NH", otherClues: "" },
-    confirmed: { exactDate: "2017-08-12", venue: "Bank of New Hampshire Pavilion", city: "Gilford", stateCountry: "NH" },
-    research: { status: "Confirmed", sourceUrl: "https://banknhpavilion.com/?d=about&page=history", notes: "Venue name standardized from the remembered Gilford Pavilion name." },
+    remembered: { approximateYearSeason: "", venue: "Bank of NH Pavilion", cityArea: "Gilford", stateCountry: "NH", otherClues: "Kelsea Ballerini opener" },
+    confirmed: { exactDate: "2018-07-05", venue: "Bank of New Hampshire Pavilion", city: "Gilford", stateCountry: "NH" },
+    research: { status: "Needs confirmation", sourceUrl: "https://www.banknhpavilion.com/?page=past_performances", notes: "Keith Urban and Kelsea Ballerini performed in Gilford on July 5 and 6; this record uses the first night until a ticket or photo confirms the exact date." },
   },
   {
     artist: "Alex Warren", attendedBy: "B",
@@ -529,6 +533,78 @@ const concerts = [
     remembered: { approximateYearSeason: "", venue: "Brighton Music Hall", cityArea: "Brighton", stateCountry: "MA", otherClues: "Wonderland Tour with Alana Springsteen" },
     confirmed: { exactDate: "2023-02-25", venue: "Brighton Music Hall", city: "Brighton", stateCountry: "MA" },
     research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Noah Kahan", attendedBy: "N",
+    remembered: { approximateYearSeason: "", venue: "MGM Music Hall", cityArea: "Boston", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2022-10-22", venue: "MGM Music Hall at Fenway", city: "Boston", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "https://noahkahan.com/gig/saturday-october-22nd-2022-mgm-music-hall-at-fenway/", notes: "Venue name standardized to MGM Music Hall at Fenway." },
+  },
+  {
+    artist: "Noah Kahan", attendedBy: "N",
+    remembered: { approximateYearSeason: "", venue: "Boston Calling", cityArea: "Cambridge", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2023-05-27", venue: "Boston Calling", city: "Cambridge", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "https://www.boston.com/culture/music/2023/05/26/boston-calling-2023-live-updates-from-the-festival/", notes: "Festival appearance confirmed on the Saturday lineup." },
+  },
+  {
+    artist: "Noah Kahan", attendedBy: "N",
+    remembered: { approximateYearSeason: "", venue: "Waterfront Park", cityArea: "Burlington", stateCountry: "VT", otherClues: "" },
+    confirmed: { exactDate: "2023-07-29", venue: "Waterfront Park", city: "Burlington", stateCountry: "VT" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Noah Kahan", attendedBy: "N",
+    remembered: { approximateYearSeason: "", venue: "Fenway Park", cityArea: "Boston", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2024-07-19", venue: "Fenway Park", city: "Boston", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Luke Bryan", attendedBy: "N",
+    remembered: { approximateYearSeason: "", venue: "Bank of NH Pavilion", cityArea: "Gilford", stateCountry: "NH", otherClues: "" },
+    confirmed: { exactDate: "2017-08-10", venue: "Bank of New Hampshire Pavilion", city: "Gilford", stateCountry: "NH" },
+    research: { status: "Confirmed", sourceUrl: "https://www.banknhpavilion.com/?page=event_info&show_code=081017", notes: "Date and venue confirmed from the venue listing; venue name standardized." },
+  },
+  {
+    artist: "Loveless", attendedBy: "N",
+    remembered: { approximateYearSeason: "", venue: "Boston Calling", cityArea: "Cambridge", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2023-05-27", venue: "Boston Calling", city: "Cambridge", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "https://www.boston.com/culture/music/2023/05/26/boston-calling-2023-live-updates-from-the-festival/", notes: "Festival appearance confirmed on the Saturday lineup." },
+  },
+  {
+    artist: "Mt. Joy", attendedBy: "N",
+    remembered: { approximateYearSeason: "", venue: "Boston Calling", cityArea: "Cambridge", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2023-05-27", venue: "Boston Calling", city: "Cambridge", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "https://www.boston.com/culture/music/2023/05/26/boston-calling-2023-live-updates-from-the-festival/", notes: "Festival appearance confirmed on the Saturday lineup." },
+  },
+  {
+    artist: "Taylor Bennett", attendedBy: "N",
+    remembered: { approximateYearSeason: "", venue: "Boston Calling", cityArea: "Cambridge", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2018-05-27", venue: "Boston Calling", city: "Cambridge", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "https://www.boston.com/culture/music/2018/05/10/boston-calling-2018-attendees-will-have-to-make-some-difficult-choices-again/", notes: "Festival appearance confirmed on the Sunday lineup." },
+  },
+  {
+    artist: "Cousin Stizz", attendedBy: "N",
+    remembered: { approximateYearSeason: "", venue: "Boston Calling", cityArea: "Cambridge", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2018-05-27", venue: "Boston Calling", city: "Cambridge", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "https://www.boston.com/culture/music/2018/05/10/boston-calling-2018-attendees-will-have-to-make-some-difficult-choices-again/", notes: "Festival appearance confirmed on the Sunday lineup." },
+  },
+  {
+    artist: "Brett Eldredge", attendedBy: "N",
+    remembered: { approximateYearSeason: "", venue: "Bank of NH Pavilion", cityArea: "Gilford", stateCountry: "NH", otherClues: "Luke Bryan opener" },
+    confirmed: { exactDate: "2017-08-10", venue: "Bank of New Hampshire Pavilion", city: "Gilford", stateCountry: "NH" },
+    research: { status: "Confirmed", sourceUrl: "https://banknhpavilion.com/?page=event_info&show_code=081017", notes: "Confirmed as an opener for Luke Bryan." },
+  },
+  {
+    artist: "Carly Pearce", attendedBy: "N",
+    remembered: { approximateYearSeason: "", venue: "Bank of NH Pavilion", cityArea: "Gilford", stateCountry: "NH", otherClues: "Jason Aldean opener" },
+    confirmed: { exactDate: "2019-07-20", venue: "Bank of New Hampshire Pavilion", city: "Gilford", stateCountry: "NH" },
+    research: { status: "Confirmed", sourceUrl: "https://www.jasonaldean.com/news/news/ride-all-night-tour-with-kane-brown-carly-pearce-kicks-off-in-may/", notes: "Confirmed as an opener for Jason Aldean with Kane Brown." },
+  },
+  {
+    artist: "Kelsea Ballerini", attendedBy: "N",
+    remembered: { approximateYearSeason: "", venue: "Bank of NH Pavilion", cityArea: "Gilford", stateCountry: "NH", otherClues: "Keith Urban opener" },
+    confirmed: { exactDate: "2018-07-05", venue: "Bank of New Hampshire Pavilion", city: "Gilford", stateCountry: "NH" },
+    research: { status: "Needs confirmation", sourceUrl: "https://www.banknhpavilion.com/?page=past_performances", notes: "Keith Urban and Kelsea Ballerini performed in Gilford on July 5 and 6; this record uses the first night until a ticket or photo confirms the exact date." },
   },
 ];
 const attendanceLabel = { N: "Nick", L: "Liz", B: "Both" };
