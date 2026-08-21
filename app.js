@@ -533,9 +533,82 @@ const concerts = [
 ];
 const attendance = Object.fromEntries(concerts.map(concert => [concert.artist, concert.attendedBy]));
 const attendanceLabel = { N: "Nick", L: "Liz", B: "Both" };
+const concertByArtist = Object.fromEntries(concerts.map(concert => [concert.artist, concert]));
 let activeGenre = "All";
 let activeAttendee = "All";
 let query = "";
+let activeYear = "All";
+let activeLocation = "All";
+let activeVenue = "All";
+let eventSort = "newest";
+
+function formatDate(exactDate, approximateYearSeason = "") {
+  if (!exactDate) return approximateYearSeason ? `Approx. ${approximateYearSeason}` : "Date unknown";
+  const [year, month, day] = exactDate.split("-").map(Number);
+  return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" })
+    .format(new Date(year, month - 1, day));
+}
+
+function getConcertLocation(concert) {
+  const city = concert.confirmed.city || concert.remembered.cityArea || "Unknown city";
+  const stateCountry = concert.confirmed.stateCountry || concert.remembered.stateCountry || "";
+  return stateCountry ? `${city} · ${stateCountry}` : city;
+}
+
+function getEventAttendance(lineup) {
+  const nickWasThere = lineup.some(concert => concert.attendedBy === "N" || concert.attendedBy === "B");
+  const lizWasThere = lineup.some(concert => concert.attendedBy === "L" || concert.attendedBy === "B");
+  return nickWasThere && lizWasThere ? "B" : nickWasThere ? "N" : "L";
+}
+
+const eventMap = concerts.reduce((events, concert) => {
+  const dateKey = concert.confirmed.exactDate || `approx-${concert.remembered.approximateYearSeason || concert.artist}`;
+  const venue = concert.confirmed.venue || concert.remembered.venue || "Unknown venue";
+  const city = concert.confirmed.city || concert.remembered.cityArea || "Unknown city";
+  const key = `${dateKey}|${venue}|${city}`;
+  if (!events.has(key)) {
+    events.set(key, {
+      key,
+      exactDate: concert.confirmed.exactDate,
+      approximateYearSeason: concert.remembered.approximateYearSeason,
+      venue,
+      city,
+      stateCountry: concert.confirmed.stateCountry || concert.remembered.stateCountry || "",
+      lineup: [],
+    });
+  }
+  events.get(key).lineup.push(concert);
+  return events;
+}, new Map());
+
+const concertEvents = [...eventMap.values()].map(event => ({
+  ...event,
+  attendedBy: getEventAttendance(event.lineup),
+  year: event.exactDate ? event.exactDate.slice(0, 4) : "Unknown",
+  location: event.stateCountry ? `${event.city} · ${event.stateCountry}` : event.city,
+  researchStatus: event.lineup.some(concert => concert.research.status === "Needs Research") ? "Needs Research" : "Confirmed",
+}));
+const years = [...new Set(concertEvents.filter(event => event.year !== "Unknown").map(event => event.year))].sort((a, b) => b.localeCompare(a));
+const locations = [...new Set(concertEvents.map(event => event.location))].sort((a, b) => a.localeCompare(b));
+const venues = [...new Set(concertEvents.map(event => event.venue))].sort((a, b) => a.localeCompare(b));
+
+function sortConcertEvents(events, mode) {
+  return [...events].sort((a, b) => {
+    if (mode === "venue") return a.venue.localeCompare(b.venue) || (b.exactDate || "").localeCompare(a.exactDate || "");
+    if (!a.exactDate && !b.exactDate) return a.venue.localeCompare(b.venue);
+    if (!a.exactDate) return 1;
+    if (!b.exactDate) return -1;
+    return mode === "oldest" ? a.exactDate.localeCompare(b.exactDate) : b.exactDate.localeCompare(a.exactDate);
+  });
+}
+
+function filteredConcertEvents() {
+  return sortConcertEvents(concertEvents.filter(event =>
+    (activeYear === "All" || event.year === activeYear) &&
+    (activeLocation === "All" || event.location === activeLocation) &&
+    (activeVenue === "All" || event.venue === activeVenue)
+  ), eventSort);
+}
 
 const counts = Object.entries(artists.reduce((acc, artist) => {
   acc[artist.genre] = (acc[artist.genre] || 0) + 1;
@@ -568,10 +641,32 @@ document.getElementById("app").innerHTML = `
   <aside class="insight-card"><span>THE HEADLINE</span><strong>${countryCount}</strong><h3>country artists</h3><p>Country is the clear main stage, with modern country-pop, red dirt, outlaw, and roots all in the mix.</p></aside></div>
 </section>
 <section class="stats-strip"><article><span>COUNTRY CROSSOVERS</span><strong>${crossoverCount}</strong><p>artists tagged across genre lines</p></article><article><span>GROUP ENERGY</span><strong>${artists.filter(a=>a.tags.includes("Vocal group")||a.tags.includes("Duo")).length}</strong><p>duos and vocal groups</p></article><article><span>SONGWRITERS’ ROW</span><strong>${artists.filter(a=>a.tags.includes("Singer-songwriter")).length}</strong><p>singer-songwriters seen live</p></article></section>
+<section class="explorer" id="explorer">
+  <div class="section-heading"><div><span class="kicker">03 / CONCERT EXPLORER</span><h2>One night, full lineup</h2></div><p>The artist archive becomes ${concertEvents.length} distinct concert nights. Filter the calendar, revisit a venue, and see every name that shared the bill.</p></div>
+  <div class="explorer-stats">
+    <article><strong>${concertEvents.length}</strong><span>concert nights</span></article>
+    <article><strong>${venues.length}</strong><span>venues visited</span></article>
+    <article><strong>${locations.length}</strong><span>locations</span></article>
+  </div>
+  <div class="explorer-controls" aria-label="Concert filters">
+    <label><span>Year</span><select id="year-filter"><option value="All">All years</option>${years.map(year=>`<option value="${year}">${year}</option>`).join("")}<option value="Unknown">Date unknown</option></select></label>
+    <label><span>Location</span><select id="location-filter"><option value="All">All locations</option>${locations.map(location=>`<option value="${location}">${location}</option>`).join("")}</select></label>
+    <label><span>Venue</span><select id="venue-filter"><option value="All">All venues</option>${venues.map(venue=>`<option value="${venue}">${venue}</option>`).join("")}</select></label>
+    <label><span>Sort</span><select id="event-sort"><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="venue">Venue A–Z</option></select></label>
+    <button class="reset-filters" id="reset-event-filters" type="button">Clear filters</button>
+  </div>
+  <div class="explorer-results"><p id="event-result-count"></p><span>Artist appearances on the same date and at the same venue are grouped together.</span></div>
+  <div class="concert-grid" id="concert-grid"></div>
+  <div class="empty" id="event-empty" hidden>No concert nights match those filters.</div>
+</section>
 <section class="roster" id="roster">
-  <div class="section-heading roster-head"><div><span class="kicker">03 / THE ROSTER</span><h2>Every name on the bill</h2></div><p id="result-count"></p></div>
+  <div class="section-heading roster-head"><div><span class="kicker">04 / THE ROSTER</span><h2>Every name on the bill</h2></div><p id="result-count"></p></div>
   <div class="controls"><div class="filter-groups"><div class="filters attendance-filters" id="attendee-filters"></div><div class="filters" id="genre-filters"></div></div><label class="search"><span>⌕</span><input id="search" placeholder="Search artists or styles" aria-label="Search artists or styles"></label></div>
   <div class="artist-grid" id="artist-grid"></div><div class="empty" id="empty" hidden>No artists found. Try another search.</div>
+</section>
+<section class="timeline-section" id="timeline">
+  <div class="section-heading"><div><span class="kicker">05 / THE TIMELINE</span><h2>Every encore, in order</h2></div><p id="timeline-summary">A chronological view of the concert nights currently selected in the explorer.</p></div>
+  <div class="timeline" id="concert-timeline"></div>
 </section>
 <footer><span>NICK + LIZ · ${artists.length} NAMES · COUNTLESS ENCORES</span><p>Built from our concert history ✦ Genre labels are intentionally broad.</p></footer>`;
 
@@ -580,11 +675,56 @@ function attendeeMatches(who) {
     activeAttendee === "Nick" && (who === "N" || who === "B") ||
     activeAttendee === "Liz" && (who === "L" || who === "B");
 }
+
+function renderTimeline(events) {
+  const chronological = sortConcertEvents(events, "newest");
+  const groups = chronological.reduce((yearsByEvent, event) => {
+    if (!yearsByEvent[event.year]) yearsByEvent[event.year] = [];
+    yearsByEvent[event.year].push(event);
+    return yearsByEvent;
+  }, {});
+  const yearOrder = Object.keys(groups).sort((a, b) => {
+    if (a === "Unknown") return 1;
+    if (b === "Unknown") return -1;
+    return b.localeCompare(a);
+  });
+  document.getElementById("concert-timeline").innerHTML = yearOrder.map(year => `
+    <section class="timeline-year">
+      <div class="timeline-year-label"><span>${year === "Unknown" ? "DATE TBD" : year}</span><strong>${groups[year].length}</strong></div>
+      <div class="timeline-events">${groups[year].map(event => `
+        <article class="timeline-event">
+          <time>${formatDate(event.exactDate, event.approximateYearSeason)}</time>
+          <div><h3>${event.venue}</h3><p>${event.location}</p><small>${event.lineup.map(concert => concert.artist).join(" · ")}</small></div>
+          <span class="attendance-dot ${event.attendedBy.toLowerCase()}" title="${attendanceLabel[event.attendedBy]}"></span>
+        </article>`).join("")}</div>
+    </section>`).join("");
+  document.getElementById("timeline-summary").textContent = events.length === concertEvents.length
+    ? `All ${events.length} concert nights, from newest to oldest.`
+    : `${events.length} filtered concert night${events.length === 1 ? "" : "s"}, from newest to oldest.`;
+}
+
+function renderExplorer() {
+  const filtered = filteredConcertEvents();
+  document.getElementById("event-result-count").textContent = `${filtered.length} concert night${filtered.length === 1 ? "" : "s"} showing`;
+  document.getElementById("concert-grid").innerHTML = filtered.map(event => `
+    <article class="concert-card">
+      <div class="concert-date"><span>${event.year === "Unknown" ? "DATE TBD" : event.year}</span><strong>${formatDate(event.exactDate, event.approximateYearSeason)}</strong></div>
+      <div class="concert-card-body">
+        <div class="concert-card-meta"><span class="event-attendance ${event.attendedBy.toLowerCase()}">${attendanceLabel[event.attendedBy]}</span><span class="event-status ${event.researchStatus === "Needs Research" ? "needs-research" : ""}">${event.researchStatus}</span></div>
+        <h3>${event.venue}</h3><p class="concert-place">${event.location}</p>
+        <div class="concert-lineup"><span>On the bill · ${event.lineup.length}</span><div>${event.lineup.map(concert => `<b>${concert.artist}</b>`).join("")}</div></div>
+      </div>
+    </article>`).join("");
+  document.getElementById("event-empty").hidden = filtered.length !== 0;
+  renderTimeline(filtered);
+}
+
 function render() {
   const filtered = artists.filter(artist => {
     const genreMatch = activeGenre === "All" || artist.genre === activeGenre;
     const who = attendance[artist.name];
-    const text = `${artist.name} ${artist.genre} ${artist.tags.join(" ")} ${attendanceLabel[who]}`.toLowerCase();
+    const concert = concertByArtist[artist.name];
+    const text = `${artist.name} ${artist.genre} ${artist.tags.join(" ")} ${attendanceLabel[who]} ${concert.confirmed.exactDate} ${concert.confirmed.venue} ${getConcertLocation(concert)}`.toLowerCase();
     return genreMatch && attendeeMatches(who) && text.includes(query.toLowerCase());
   });
   document.getElementById("result-count").textContent = `${filtered.length} artist${filtered.length===1?"":"s"} showing`;
@@ -592,6 +732,7 @@ function render() {
     <article class="artist-card" style="--accent:${colors[artist.genre]}">
       <span class="attendance-badge ${attendance[artist.name].toLowerCase()}">${attendanceLabel[attendance[artist.name]]}</span>
       <div class="monogram">${artist.initials}</div><div><h3>${artist.name}</h3><p>${artist.genre}</p></div>
+      <div class="artist-concert"><span>${formatDate(concertByArtist[artist.name].confirmed.exactDate, concertByArtist[artist.name].remembered.approximateYearSeason)}</span><strong>${concertByArtist[artist.name].confirmed.venue || concertByArtist[artist.name].remembered.venue}</strong><small>${getConcertLocation(concertByArtist[artist.name])}</small></div>
       <div class="tags">${artist.tags.map(tag=>`<span>${tag}</span>`).join("")}</div>
     </article>`).join("");
   document.getElementById("empty").hidden = filtered.length !== 0;
@@ -604,4 +745,23 @@ function render() {
 document.querySelectorAll("[data-attendee-card]").forEach(btn => btn.onclick=()=>{activeAttendee=activeAttendee===btn.dataset.attendeeCard?"All":btn.dataset.attendeeCard;render();document.getElementById("roster").scrollIntoView({behavior:"smooth"});});
 document.querySelectorAll("[data-chart-genre]").forEach(btn => btn.onclick=()=>{activeGenre=btn.dataset.chartGenre;render();document.getElementById("roster").scrollIntoView({behavior:"smooth"});});
 document.getElementById("search").addEventListener("input", e=>{query=e.target.value;render();});
+["year-filter", "location-filter", "venue-filter", "event-sort"].forEach(id => document.getElementById(id).addEventListener("change", event => {
+  if (id === "year-filter") activeYear = event.target.value;
+  if (id === "location-filter") activeLocation = event.target.value;
+  if (id === "venue-filter") activeVenue = event.target.value;
+  if (id === "event-sort") eventSort = event.target.value;
+  renderExplorer();
+}));
+document.getElementById("reset-event-filters").onclick = () => {
+  activeYear = "All";
+  activeLocation = "All";
+  activeVenue = "All";
+  eventSort = "newest";
+  document.getElementById("year-filter").value = activeYear;
+  document.getElementById("location-filter").value = activeLocation;
+  document.getElementById("venue-filter").value = activeVenue;
+  document.getElementById("event-sort").value = eventSort;
+  renderExplorer();
+};
+renderExplorer();
 render();
