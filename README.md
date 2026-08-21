@@ -4,12 +4,13 @@ This folder is a complete static website. It does not require npm, React, a data
 
 ## Upload
 
-Upload these four files to the root of a GitHub repository:
+Upload these files to the root of a GitHub repository:
 
 - index.html
 - styles.css
 - app.js
 - og.png
+- favicon.svg
 
 Do not upload the ZIP itself. Extract it first.
 
