@@ -71,30 +71,467 @@ const artists = [
   { name: "World’s First Cinema", genre: "Rock & Alternative", tags: ["Cinematic rock", "Alternative pop"], initials: "WF" },
   { name: "Brett Young", genre: "Country", tags: ["Country pop"], initials: "BY" },
   { name: "Bailey Zimmerman", genre: "Country", tags: ["Country rock"], initials: "BZ" },
+  { name: "Alana Springsteen", genre: "Country", tags: ["Country pop", "Singer-songwriter"], initials: "AS" },
+  { name: "MaRynn Taylor", genre: "Country", tags: ["Country pop", "Singer-songwriter"], initials: "MT" },
+  { name: "Adam Doleac", genre: "Country", tags: ["Country pop", "Singer-songwriter"], initials: "AD" },
 ];
 const colors = {
   Country: "#ffca3a", Pop: "#ff5ea0", "Indie & Folk": "#7bdff2",
   "Rock & Alternative": "#9b8cff", "R&B & Hip-Hop": "#ff795d", Other: "#8fe0b1",
 };
-const attendance = {
-  "Gracie Abrams":"B", "Taylor Acorn":"L", "Lauren Alaina":"L", "Jason Aldean":"N",
-  "Ashe":"B", "Kelsea Ballerini":"B", "Eddie Benjamin":"B", "Dierks Bentley":"B",
-  "Blü Eyes":"L", "Kane Brown":"N", "Luke Bryan":"N", "Cam":"L", "Eric Church":"N",
-  "Luke Combs":"N", "Sheryl Crow":"L", "Noah Cyrus":"B", "Shelby Darrell":"L", "Djo":"B",
-  "DNCE":"N", "Edgehill":"L", "Filmore":"L", "Rachel Grae":"B", "Corey Harper":"B",
-  "Hunter Hayes":"L", "Hozier":"B", "Sam Hunt":"L", "Jelly Roll":"B",
-  "Josiah and the Bonnevilles":"B", "Noah Kahan":"B", "Khalid":"N", "Alexandra Kay":"L",
-  "Lady A":"L", "Noah Levine":"B", "Little Big Town":"N", "Dustin Lynch":"N",
-  "Maddie & Tae":"L", "The Man, The Myth, The Meatslab":"B", "Shawn Mendes":"B",
-  "Niko Moon":"L", "Maren Morris":"L", "Tim McGraw":"L", "Mt. Joy":"N", "Paramore":"L",
-  "Gigi Perez":"B", "Carly Pearce":"L", "P!nk":"L", "Cassadee Pope":"L", "Post Malone":"B",
-  "Rascal Flatts":"L", "Ethan Regan":"B", "Chase Rice":"N", "Owen Riegling":"L",
-  "Josh Ross":"B", "Royel Otis":"N", "Michael Sanzone":"L", "Sophia Scott":"L",
-  "Jay Sean":"N", "Set It Off":"L", "Nate Smith":"B", "Chris Stapleton":"N",
-  "Straight No Chaser":"L", "The Strike":"N", "Taylor Swift":"L", "Carrie Underwood":"L",
-  "Keith Urban":"N", "Alex Warren":"B", "Hudson Westbrook":"B", "Brandon Wisham":"B",
-  "Blake Whiten":"B", "World’s First Cinema":"L", "Brett Young":"L", "Bailey Zimmerman":"B",
-};
+const concerts = [
+  {
+    artist: "Gracie Abrams", attendedBy: "B",
+    remembered: { approximateYearSeason: "", venue: "Budweiser Stage", cityArea: "Toronto", stateCountry: "Canada", otherClues: "" },
+    confirmed: { exactDate: "2025-07-26", venue: "Budweiser Stage", city: "Toronto", stateCountry: "Canada" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Taylor Acorn", attendedBy: "L",
+    remembered: { approximateYearSeason: "", venue: "Brighton Music Hall", cityArea: "Brighton", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2024-04-20", venue: "Brighton Music Hall", city: "Brighton", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Lauren Alaina", attendedBy: "L",
+    remembered: { approximateYearSeason: "", venue: "Toad's Place", cityArea: "New Haven", stateCountry: "CT", otherClues: "" },
+    confirmed: { exactDate: "2022-09-01", venue: "Toad's Place", city: "New Haven", stateCountry: "CT" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Jason Aldean", attendedBy: "N",
+    remembered: { approximateYearSeason: "", venue: "Gilford Pavilion", cityArea: "Gilford", stateCountry: "NH", otherClues: "" },
+    confirmed: { exactDate: "2019-07-20", venue: "Bank of New Hampshire Pavilion", city: "Gilford", stateCountry: "NH" },
+    research: { status: "Confirmed", sourceUrl: "https://www.concertarchives.org/venues/bank-of-new-hampshire-pavilion?page=2&year=2019", notes: "Venue name standardized from the remembered Gilford Pavilion name." },
+  },
+  {
+    artist: "Ashe", attendedBy: "B",
+    remembered: { approximateYearSeason: "", venue: "TD Garden", cityArea: "Boston", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2025-02-13", venue: "TD Garden", city: "Boston", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Kelsea Ballerini", attendedBy: "B",
+    remembered: { approximateYearSeason: "", venue: "TD Garden", cityArea: "Boston", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2025-02-13", venue: "TD Garden", city: "Boston", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Eddie Benjamin", attendedBy: "B",
+    remembered: { approximateYearSeason: "", venue: "TD Garden", cityArea: "Boston", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2025-09-25", venue: "TD Garden", city: "Boston", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Dierks Bentley", attendedBy: "B",
+    remembered: { approximateYearSeason: "", venue: "Xfinity Center", cityArea: "Mansfield", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2024-08-09", venue: "Xfinity Center", city: "Mansfield", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Blü Eyes", attendedBy: "L",
+    remembered: { approximateYearSeason: "", venue: "The Intersection", cityArea: "Grand Rapids", stateCountry: "MI", otherClues: "" },
+    confirmed: { exactDate: "2026-04-11", venue: "The Intersection", city: "Grand Rapids", stateCountry: "MI" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Kane Brown", attendedBy: "N",
+    remembered: { approximateYearSeason: "", venue: "Gilford Arena", cityArea: "Gilford", stateCountry: "NH", otherClues: "" },
+    confirmed: { exactDate: "2019-07-20", venue: "Bank of New Hampshire Pavilion", city: "Gilford", stateCountry: "NH" },
+    research: { status: "Confirmed", sourceUrl: "https://www.concertarchives.org/venues/bank-of-new-hampshire-pavilion?page=2&year=2019", notes: "Venue name standardized from the remembered Gilford Arena name." },
+  },
+  {
+    artist: "Luke Bryan", attendedBy: "N",
+    remembered: { approximateYearSeason: "", venue: "Gillette Stadium", cityArea: "Foxborough", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2016-07-16", venue: "Gillette Stadium", city: "Foxborough", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Cam", attendedBy: "L",
+    remembered: { approximateYearSeason: "", venue: "Toad's Place", cityArea: "New Haven", stateCountry: "CT", otherClues: "" },
+    confirmed: { exactDate: "2022-10-02", venue: "Toad's Place", city: "New Haven", stateCountry: "CT" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Eric Church", attendedBy: "N",
+    remembered: { approximateYearSeason: "", venue: "TD Garden", cityArea: "Boston", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2017-01-28", venue: "TD Garden", city: "Boston", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Luke Combs", attendedBy: "N",
+    remembered: { approximateYearSeason: "", venue: "DCU Center", cityArea: "Worcester", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2019-03-02", venue: "DCU Center", city: "Worcester", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Sheryl Crow", attendedBy: "L",
+    remembered: { approximateYearSeason: "", venue: "The Intersection", cityArea: "Grand Rapids", stateCountry: "MI", otherClues: "" },
+    confirmed: { exactDate: "2026-04-11", venue: "The Intersection", city: "Grand Rapids", stateCountry: "MI" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Noah Cyrus", attendedBy: "B",
+    remembered: { approximateYearSeason: "", venue: "TD Garden", cityArea: "Boston", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2026-07-13", venue: "TD Garden", city: "Boston", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Shelby Darrell", attendedBy: "L",
+    remembered: { approximateYearSeason: "", venue: "Bernie's Beach Bar", cityArea: "Hampton Beach", stateCountry: "NH", otherClues: "Opener" },
+    confirmed: { exactDate: "2023-07-02", venue: "Bernie's Beach Bar", city: "Hampton Beach", stateCountry: "NH" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Djo", attendedBy: "B",
+    remembered: { approximateYearSeason: "", venue: "Budweiser Stage", cityArea: "Toronto", stateCountry: "Canada", otherClues: "" },
+    confirmed: { exactDate: "2025-07-26", venue: "Budweiser Stage", city: "Toronto", stateCountry: "Canada" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "DNCE", attendedBy: "N",
+    remembered: { approximateYearSeason: "2019", venue: "College of the Holy Cross", cityArea: "Worcester", stateCountry: "MA", otherClues: "School spring concert" },
+    confirmed: { exactDate: "", venue: "College of the Holy Cross", city: "Worcester", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "Exact date was not provided." },
+  },
+  {
+    artist: "Edgehill", attendedBy: "N",
+    remembered: { approximateYearSeason: "", venue: "Antone's Nightclub", cityArea: "Austin", stateCountry: "TX", otherClues: "" },
+    confirmed: { exactDate: "2026-03-27", venue: "Antone's Nightclub", city: "Austin", stateCountry: "TX" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Filmore", attendedBy: "L",
+    remembered: { approximateYearSeason: "", venue: "Mohegan Sun", cityArea: "Uncasville", stateCountry: "CT", otherClues: "" },
+    confirmed: { exactDate: "2021-11-13", venue: "Mohegan Sun", city: "Uncasville", stateCountry: "CT" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Rachel Grae", attendedBy: "B",
+    remembered: { approximateYearSeason: "", venue: "The Middle East", cityArea: "Cambridge", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2025-02-06", venue: "The Middle East", city: "Cambridge", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Corey Harper", attendedBy: "B",
+    remembered: { approximateYearSeason: "", venue: "The Middle East", cityArea: "Cambridge", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2026-07-09", venue: "The Middle East", city: "Cambridge", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Hunter Hayes", attendedBy: "L",
+    remembered: { approximateYearSeason: "", venue: "The Intersection", cityArea: "Grand Rapids", stateCountry: "MI", otherClues: "" },
+    confirmed: { exactDate: "2026-04-11", venue: "The Intersection", city: "Grand Rapids", stateCountry: "MI" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Hozier", attendedBy: "B",
+    remembered: { approximateYearSeason: "", venue: "Fenway Park", cityArea: "Boston", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2025-06-23", venue: "Fenway Park", city: "Boston", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Sam Hunt", attendedBy: "L",
+    remembered: { approximateYearSeason: "", venue: "MIDFLORIDA Credit Union Amphitheatre", cityArea: "East Lake-Orient Park", stateCountry: "FL", otherClues: "Wheels Up 747 Tour opener" },
+    confirmed: { exactDate: "2015-05-29", venue: "MIDFLORIDA Credit Union Amphitheatre", city: "East Lake-Orient Park", stateCountry: "FL" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Jelly Roll", attendedBy: "B",
+    remembered: { approximateYearSeason: "", venue: "Gillette Stadium", cityArea: "Foxborough", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2025-05-31", venue: "Gillette Stadium", city: "Foxborough", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Josiah and the Bonnevilles", attendedBy: "B",
+    remembered: { approximateYearSeason: "", venue: "Paradise Rock Club", cityArea: "Boston", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2024-03-26", venue: "Paradise Rock Club", city: "Boston", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Noah Kahan", attendedBy: "B",
+    remembered: { approximateYearSeason: "", venue: "Fenway Park", cityArea: "Boston", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2026-07-07", venue: "Fenway Park", city: "Boston", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Khalid", attendedBy: "N",
+    remembered: { approximateYearSeason: "", venue: "House of Blues", cityArea: "Boston", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2017-08-06", venue: "House of Blues", city: "Boston", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Alexandra Kay", attendedBy: "L",
+    remembered: { approximateYearSeason: "", venue: "Toad's Place", cityArea: "New Haven", stateCountry: "CT", otherClues: "" },
+    confirmed: { exactDate: "2023-11-12", venue: "Toad's Place", city: "New Haven", stateCountry: "CT" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Lady A", attendedBy: "L",
+    remembered: { approximateYearSeason: "", venue: "MIDFLORIDA Credit Union Amphitheatre", cityArea: "East Lake-Orient Park", stateCountry: "FL", otherClues: "Wheels Up 747 Tour" },
+    confirmed: { exactDate: "2015-05-29", venue: "MIDFLORIDA Credit Union Amphitheatre", city: "East Lake-Orient Park", stateCountry: "FL" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Noah Levine", attendedBy: "B",
+    remembered: { approximateYearSeason: "", venue: "The Middle East", cityArea: "Cambridge", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2026-07-09", venue: "The Middle East", city: "Cambridge", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Little Big Town", attendedBy: "N",
+    remembered: { approximateYearSeason: "", venue: "Gillette Stadium", cityArea: "Foxborough", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2016-07-16", venue: "Gillette Stadium", city: "Foxborough", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Dustin Lynch", attendedBy: "N",
+    remembered: { approximateYearSeason: "", venue: "Gilford Pavilion", cityArea: "Gilford", stateCountry: "NH", otherClues: "" },
+    confirmed: { exactDate: "2017-08-08", venue: "Bank of New Hampshire Pavilion", city: "Gilford", stateCountry: "NH" },
+    research: { status: "Confirmed", sourceUrl: "https://banknhpavilion.com/?d=about&page=history", notes: "Venue name standardized from the remembered Gilford Pavilion name." },
+  },
+  {
+    artist: "Maddie & Tae", attendedBy: "L",
+    remembered: { approximateYearSeason: "", venue: "Mohegan Sun", cityArea: "Uncasville", stateCountry: "CT", otherClues: "" },
+    confirmed: { exactDate: "2021-11-13", venue: "Mohegan Sun", city: "Uncasville", stateCountry: "CT" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "The Man, The Myth, The Meatslab", attendedBy: "B",
+    remembered: { approximateYearSeason: "", venue: "Brighton Music Hall", cityArea: "Brighton", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2025-10-25", venue: "Brighton Music Hall", city: "Brighton", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Shawn Mendes", attendedBy: "B",
+    remembered: { approximateYearSeason: "", venue: "TD Garden", cityArea: "Boston", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2025-09-25", venue: "TD Garden", city: "Boston", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Niko Moon", attendedBy: "L",
+    remembered: { approximateYearSeason: "", venue: "Toad's Place", cityArea: "New Haven", stateCountry: "CT", otherClues: "" },
+    confirmed: { exactDate: "2024-06-20", venue: "Toad's Place", city: "New Haven", stateCountry: "CT" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Maren Morris", attendedBy: "L",
+    remembered: { approximateYearSeason: "", venue: "Camping World Stadium", cityArea: "Orlando", stateCountry: "FL", otherClues: "Opener" },
+    confirmed: { exactDate: "2024-11-18", venue: "Camping World Stadium", city: "Orlando", stateCountry: "FL" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Tim McGraw", attendedBy: "L",
+    remembered: { approximateYearSeason: "", venue: "TD Garden", cityArea: "Boston", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2024-05-08", venue: "TD Garden", city: "Boston", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Mt. Joy", attendedBy: "N",
+    remembered: { approximateYearSeason: "", venue: "Fenway Park", cityArea: "Boston", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2024-07-19", venue: "Fenway Park", city: "Boston", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Paramore", attendedBy: "L",
+    remembered: { approximateYearSeason: "", venue: "Wembley Stadium", cityArea: "London", stateCountry: "England", otherClues: "" },
+    confirmed: { exactDate: "2024-08-17", venue: "Wembley Stadium", city: "London", stateCountry: "England" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Gigi Perez", attendedBy: "B",
+    remembered: { approximateYearSeason: "", venue: "Fenway Park", cityArea: "Boston", stateCountry: "MA", otherClues: "Opener" },
+    confirmed: { exactDate: "2025-06-23", venue: "Fenway Park", city: "Boston", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Carly Pearce", attendedBy: "L",
+    remembered: { approximateYearSeason: "", venue: "TD Garden", cityArea: "Boston", stateCountry: "MA", otherClues: "Opener" },
+    confirmed: { exactDate: "2024-05-08", venue: "TD Garden", city: "Boston", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "P!nk", attendedBy: "L",
+    remembered: { approximateYearSeason: "", venue: "Camping World Stadium", cityArea: "Orlando", stateCountry: "FL", otherClues: "" },
+    confirmed: { exactDate: "2024-11-18", venue: "Camping World Stadium", city: "Orlando", stateCountry: "FL" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Cassadee Pope", attendedBy: "L",
+    remembered: { approximateYearSeason: "2012–2013", venue: "MIDFLORIDA Credit Union Amphitheatre", cityArea: "East Lake-Orient Park", stateCountry: "FL", otherClues: "Opener for Rascal Flatts" },
+    confirmed: { exactDate: "", venue: "MIDFLORIDA Credit Union Amphitheatre", city: "East Lake-Orient Park", stateCountry: "FL" },
+    research: { status: "Needs Research", sourceUrl: "", notes: "Exact date remains unconfirmed." },
+  },
+  {
+    artist: "Post Malone", attendedBy: "B",
+    remembered: { approximateYearSeason: "", venue: "Gillette Stadium", cityArea: "Foxborough", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2025-05-31", venue: "Gillette Stadium", city: "Foxborough", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Rascal Flatts", attendedBy: "L",
+    remembered: { approximateYearSeason: "2012–2013", venue: "MIDFLORIDA Credit Union Amphitheatre", cityArea: "East Lake-Orient Park", stateCountry: "FL", otherClues: "" },
+    confirmed: { exactDate: "", venue: "MIDFLORIDA Credit Union Amphitheatre", city: "East Lake-Orient Park", stateCountry: "FL" },
+    research: { status: "Needs Research", sourceUrl: "", notes: "Exact date remains unconfirmed." },
+  },
+  {
+    artist: "Ethan Regan", attendedBy: "B",
+    remembered: { approximateYearSeason: "", venue: "Brighton Music Hall", cityArea: "Brighton", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2025-10-25", venue: "Brighton Music Hall", city: "Brighton", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Chase Rice", attendedBy: "N",
+    remembered: { approximateYearSeason: "", venue: "Xfinity Center", cityArea: "Mansfield", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2024-08-09", venue: "Xfinity Center", city: "Mansfield", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Owen Riegling", attendedBy: "L",
+    remembered: { approximateYearSeason: "", venue: "Toad's Place", cityArea: "New Haven", stateCountry: "CT", otherClues: "Opener" },
+    confirmed: { exactDate: "2024-06-20", venue: "Toad's Place", city: "New Haven", stateCountry: "CT" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Josh Ross", attendedBy: "B",
+    remembered: { approximateYearSeason: "", venue: "House of Blues", cityArea: "Boston", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2026-05-29", venue: "House of Blues", city: "Boston", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Royel Otis", attendedBy: "N",
+    remembered: { approximateYearSeason: "", venue: "House of Blues", cityArea: "Boston", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2024-09-28", venue: "House of Blues", city: "Boston", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Michael Sanzone", attendedBy: "L",
+    remembered: { approximateYearSeason: "", venue: "Roadrunner", cityArea: "Boston", stateCountry: "MA", otherClues: "Opener for Alex Warren" },
+    confirmed: { exactDate: "2025-05-07", venue: "Roadrunner", city: "Boston", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Sophia Scott", attendedBy: "L",
+    remembered: { approximateYearSeason: "", venue: "The Red Room at Cafe 939", cityArea: "Boston", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2023-12-08", venue: "The Red Room at Cafe 939", city: "Boston", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Jay Sean", attendedBy: "N",
+    remembered: { approximateYearSeason: "2019", venue: "College of the Holy Cross", cityArea: "Worcester", stateCountry: "MA", otherClues: "School spring concert" },
+    confirmed: { exactDate: "", venue: "College of the Holy Cross", city: "Worcester", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "Exact date was not provided." },
+  },
+  {
+    artist: "Set It Off", attendedBy: "L",
+    remembered: { approximateYearSeason: "2013–2015", venue: "Tarpon Springs High School", cityArea: "Tarpon Springs", stateCountry: "FL", otherClues: "Hometown theater show" },
+    confirmed: { exactDate: "", venue: "Tarpon Springs High School", city: "Tarpon Springs", stateCountry: "FL" },
+    research: { status: "Needs Research", sourceUrl: "", notes: "Exact date remains unconfirmed." },
+  },
+  {
+    artist: "Nate Smith", attendedBy: "B",
+    remembered: { approximateYearSeason: "", venue: "House of Blues", cityArea: "Boston", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2026-05-29", venue: "House of Blues", city: "Boston", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Chris Stapleton", attendedBy: "N",
+    remembered: { approximateYearSeason: "", venue: "Gillette Stadium", cityArea: "Foxborough", stateCountry: "MA", otherClues: "Opener" },
+    confirmed: { exactDate: "2016-07-16", venue: "Gillette Stadium", city: "Foxborough", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Straight No Chaser", attendedBy: "L",
+    remembered: { approximateYearSeason: "", venue: "The VETS", cityArea: "Providence", stateCountry: "RI", otherClues: "" },
+    confirmed: { exactDate: "2022-12-02", venue: "The VETS", city: "Providence", stateCountry: "RI" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "The Strike", attendedBy: "N",
+    remembered: { approximateYearSeason: "", venue: "Brighton Music Hall", cityArea: "Brighton", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2024-07-21", venue: "Brighton Music Hall", city: "Brighton", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Taylor Swift", attendedBy: "L",
+    remembered: { approximateYearSeason: "", venue: "Wembley Stadium", cityArea: "London", stateCountry: "England", otherClues: "" },
+    confirmed: { exactDate: "2024-08-17", venue: "Wembley Stadium", city: "London", stateCountry: "England" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Carrie Underwood", attendedBy: "L",
+    remembered: { approximateYearSeason: "", venue: "TD Garden", cityArea: "Boston", stateCountry: "MA", otherClues: "Denim & Rhinestones Tour" },
+    confirmed: { exactDate: "2023-02-17", venue: "TD Garden", city: "Boston", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Keith Urban", attendedBy: "N",
+    remembered: { approximateYearSeason: "", venue: "Gilford Pavilion", cityArea: "Gilford", stateCountry: "NH", otherClues: "" },
+    confirmed: { exactDate: "2017-08-12", venue: "Bank of New Hampshire Pavilion", city: "Gilford", stateCountry: "NH" },
+    research: { status: "Confirmed", sourceUrl: "https://banknhpavilion.com/?d=about&page=history", notes: "Venue name standardized from the remembered Gilford Pavilion name." },
+  },
+  {
+    artist: "Alex Warren", attendedBy: "B",
+    remembered: { approximateYearSeason: "", venue: "TD Garden", cityArea: "Boston", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2026-07-13", venue: "TD Garden", city: "Boston", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Hudson Westbrook", attendedBy: "B",
+    remembered: { approximateYearSeason: "", venue: "TD Garden", cityArea: "Boston", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2026-03-05", venue: "TD Garden", city: "Boston", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Brandon Wisham", attendedBy: "B",
+    remembered: { approximateYearSeason: "", venue: "House of Blues", cityArea: "Boston", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2026-05-29", venue: "House of Blues", city: "Boston", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Blake Whiten", attendedBy: "B",
+    remembered: { approximateYearSeason: "", venue: "TD Garden", cityArea: "Boston", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2026-03-05", venue: "TD Garden", city: "Boston", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "World’s First Cinema", attendedBy: "L",
+    remembered: { approximateYearSeason: "", venue: "Brighton Music Hall", cityArea: "Brighton", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2024-04-20", venue: "Brighton Music Hall", city: "Brighton", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Brett Young", attendedBy: "L",
+    remembered: { approximateYearSeason: "", venue: "Mohegan Sun", cityArea: "Uncasville", stateCountry: "CT", otherClues: "" },
+    confirmed: { exactDate: "2021-11-13", venue: "Mohegan Sun", city: "Uncasville", stateCountry: "CT" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Bailey Zimmerman", attendedBy: "B",
+    remembered: { approximateYearSeason: "", venue: "TD Garden", cityArea: "Boston", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2026-03-05", venue: "TD Garden", city: "Boston", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Alana Springsteen", attendedBy: "L",
+    remembered: { approximateYearSeason: "", venue: "The Red Room at Cafe 939", cityArea: "Boston", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2023-12-08", venue: "The Red Room at Cafe 939", city: "Boston", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "MaRynn Taylor", attendedBy: "L",
+    remembered: { approximateYearSeason: "", venue: "TD Garden", cityArea: "Boston", stateCountry: "MA", otherClues: "" },
+    confirmed: { exactDate: "2025-02-13", venue: "TD Garden", city: "Boston", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Adam Doleac", attendedBy: "L",
+    remembered: { approximateYearSeason: "", venue: "Brighton Music Hall", cityArea: "Brighton", stateCountry: "MA", otherClues: "Wonderland Tour with Alana Springsteen" },
+    confirmed: { exactDate: "2023-02-25", venue: "Brighton Music Hall", city: "Brighton", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+];
+const attendance = Object.fromEntries(concerts.map(concert => [concert.artist, concert.attendedBy]));
 const attendanceLabel = { N: "Nick", L: "Liz", B: "Both" };
 let activeGenre = "All";
 let activeAttendee = "All";
@@ -112,9 +549,9 @@ const lizCount = artists.filter(a => attendance[a.name] !== "N").length;
 
 document.getElementById("app").innerHTML = `
 <header class="hero">
-  <nav><span class="brand"><i></i> CONCERT PASSPORT</span><span class="issue">NICK + LIZ · 72 ARTISTS</span></nav>
+  <nav><span class="brand"><i></i> CONCERT PASSPORT</span><span class="issue">NICK + LIZ · ${artists.length} ARTISTS</span></nav>
   <div class="hero-copy"><p class="eyebrow">THE LIVE MUSIC ARCHIVE</p><h1>We were<br><em>there.</em></h1><p class="lede">From stadium country to indie basements, this is every artist we’ve seen live—mapped by the sounds that got us there.</p></div>
-  <div class="hero-numbers"><div><strong>72</strong><span>artists seen</span></div><div><strong>${togetherCount}</strong><span>seen together</span></div><div><strong>${Math.round(togetherCount / artists.length * 100)}%</strong><span>shared lineup</span></div></div>
+  <div class="hero-numbers"><div><strong>${artists.length}</strong><span>artists seen</span></div><div><strong>${togetherCount}</strong><span>seen together</span></div><div><strong>${Math.round(togetherCount / artists.length * 100)}%</strong><span>shared lineup</span></div></div>
   <div class="ticket-stub"><span>ADMIT TWO</span><b>N + L<br>LIVE</b><small>NO EXPIRATION</small></div>
 </header>
 <section class="attendance-section">
@@ -136,7 +573,7 @@ document.getElementById("app").innerHTML = `
   <div class="controls"><div class="filter-groups"><div class="filters attendance-filters" id="attendee-filters"></div><div class="filters" id="genre-filters"></div></div><label class="search"><span>⌕</span><input id="search" placeholder="Search artists or styles" aria-label="Search artists or styles"></label></div>
   <div class="artist-grid" id="artist-grid"></div><div class="empty" id="empty" hidden>No artists found. Try another search.</div>
 </section>
-<footer><span>NICK + LIZ · 72 NAMES · COUNTLESS ENCORES</span><p>Built from our concert history ✦ Genre labels are intentionally broad.</p></footer>`;
+<footer><span>NICK + LIZ · ${artists.length} NAMES · COUNTLESS ENCORES</span><p>Built from our concert history ✦ Genre labels are intentionally broad.</p></footer>`;
 
 function attendeeMatches(who) {
   return activeAttendee === "All" || activeAttendee === "Both" && who === "B" ||
