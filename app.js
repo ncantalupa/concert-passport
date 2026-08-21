@@ -586,7 +586,6 @@ const concertEvents = [...eventMap.values()].map(event => ({
   attendedBy: getEventAttendance(event.lineup),
   year: event.exactDate ? event.exactDate.slice(0, 4) : "Unknown",
   location: event.stateCountry ? `${event.city} · ${event.stateCountry}` : event.city,
-  researchStatus: event.lineup.some(concert => concert.research.status === "Needs Research") ? "Needs Research" : "Confirmed",
 }));
 const years = [...new Set(concertEvents.filter(event => event.year !== "Unknown").map(event => event.year))].sort((a, b) => b.localeCompare(a));
 const locations = [...new Set(concertEvents.map(event => event.location))].sort((a, b) => a.localeCompare(b));
@@ -627,8 +626,15 @@ document.getElementById("app").innerHTML = `
   <div class="hero-numbers"><div><strong>${artists.length}</strong><span>artists seen</span></div><div><strong>${togetherCount}</strong><span>seen together</span></div><div><strong>${Math.round(togetherCount / artists.length * 100)}%</strong><span>shared lineup</span></div></div>
   <div class="ticket-stub"><span>ADMIT TWO</span><b>N + L<br>LIVE</b><small>NO EXPIRATION</small></div>
 </header>
+<nav class="tab-nav" role="tablist" aria-label="Concert Passport sections">
+  <button class="active" id="tab-overview" type="button" role="tab" aria-selected="true" aria-controls="panel-overview" data-tab="overview"><span>01</span>Overview</button>
+  <button id="tab-concerts" type="button" role="tab" aria-selected="false" aria-controls="panel-concerts" tabindex="-1" data-tab="concerts"><span>02</span>Concerts</button>
+  <button id="tab-artists" type="button" role="tab" aria-selected="false" aria-controls="panel-artists" tabindex="-1" data-tab="artists"><span>03</span>Artists</button>
+  <button id="tab-timeline" type="button" role="tab" aria-selected="false" aria-controls="panel-timeline" tabindex="-1" data-tab="timeline"><span>04</span>Timeline</button>
+</nav>
+<div class="tab-panel" id="panel-overview" role="tabpanel" aria-labelledby="tab-overview" data-tab-panel="overview">
 <section class="attendance-section">
-  <div class="section-heading"><div><span class="kicker">01 / WHO WAS THERE</span><h2>Two fans, one archive</h2></div><p>Solo favorites and shared nights, all in one place. Choose a person to filter the full artist roster.</p></div>
+  <div class="section-heading"><div><h2>Two fans, one archive</h2></div><p>Solo favorites and shared nights, all in one place. Choose a person to filter the full artist roster.</p></div>
   <div class="attendance-grid">
     <button class="nick" data-attendee-card="Nick"><span>N</span><strong>${nickCount}</strong><h3>Nick</h3><p>${nickCount-togetherCount} solo · ${togetherCount} shared</p></button>
     <button class="both" data-attendee-card="Both"><span>N + L</span><strong>${togetherCount}</strong><h3>Together</h3><p>${Math.round(togetherCount/artists.length*100)}% of the full lineup</p></button>
@@ -636,13 +642,15 @@ document.getElementById("app").innerHTML = `
   </div>
 </section>
 <section class="genre-section">
-  <div class="section-heading"><div><span class="kicker">02 / THE SOUND</span><h2>Where the nights live</h2></div><p>Broad genre groupings based on each artist’s primary sound. The crossover tags tell the fuller story.</p></div>
+  <div class="section-heading"><div><h2>Where the nights live</h2></div><p>Broad genre groupings based on each artist’s primary sound. The crossover tags tell the fuller story.</p></div>
   <div class="genre-layout"><div class="genre-bars">${counts.map(([genre,count],i)=>`<button class="bar-row" data-chart-genre="${genre}"><span class="rank">0${i+1}</span><span class="bar-label">${genre}</span><span class="bar-track"><i style="width:${count/countryCount*100}%;background:${colors[genre]}"></i></span><strong>${count}</strong></button>`).join("")}</div>
   <aside class="insight-card"><span>THE HEADLINE</span><strong>${countryCount}</strong><h3>country artists</h3><p>Country is the clear main stage, with modern country-pop, red dirt, outlaw, and roots all in the mix.</p></aside></div>
 </section>
 <section class="stats-strip"><article><span>COUNTRY CROSSOVERS</span><strong>${crossoverCount}</strong><p>artists tagged across genre lines</p></article><article><span>GROUP ENERGY</span><strong>${artists.filter(a=>a.tags.includes("Vocal group")||a.tags.includes("Duo")).length}</strong><p>duos and vocal groups</p></article><article><span>SONGWRITERS’ ROW</span><strong>${artists.filter(a=>a.tags.includes("Singer-songwriter")).length}</strong><p>singer-songwriters seen live</p></article></section>
+</div>
+<div class="tab-panel" id="panel-concerts" role="tabpanel" aria-labelledby="tab-concerts" data-tab-panel="concerts" hidden>
 <section class="explorer" id="explorer">
-  <div class="section-heading"><div><span class="kicker">03 / CONCERT EXPLORER</span><h2>One night, full lineup</h2></div><p>The artist archive becomes ${concertEvents.length} distinct concert nights. Filter the calendar, revisit a venue, and see every name that shared the bill.</p></div>
+  <div class="section-heading"><div><h2>One night, full lineup</h2></div><p>The artist archive becomes ${concertEvents.length} distinct concert nights. Filter the calendar, revisit a venue, and see every name that shared the bill.</p></div>
   <div class="explorer-stats">
     <article><strong>${concertEvents.length}</strong><span>concert nights</span></article>
     <article><strong>${venues.length}</strong><span>venues visited</span></article>
@@ -659,21 +667,38 @@ document.getElementById("app").innerHTML = `
   <div class="concert-grid" id="concert-grid"></div>
   <div class="empty" id="event-empty" hidden>No concert nights match those filters.</div>
 </section>
+</div>
+<div class="tab-panel" id="panel-artists" role="tabpanel" aria-labelledby="tab-artists" data-tab-panel="artists" hidden>
 <section class="roster" id="roster">
-  <div class="section-heading roster-head"><div><span class="kicker">04 / THE ROSTER</span><h2>Every name on the bill</h2></div><p id="result-count"></p></div>
+  <div class="section-heading roster-head"><div><h2>Every name on the bill</h2></div><p id="result-count"></p></div>
   <div class="controls"><div class="filter-groups"><div class="filters attendance-filters" id="attendee-filters"></div><div class="filters" id="genre-filters"></div></div><label class="search"><span>⌕</span><input id="search" placeholder="Search artists or styles" aria-label="Search artists or styles"></label></div>
   <div class="artist-grid" id="artist-grid"></div><div class="empty" id="empty" hidden>No artists found. Try another search.</div>
 </section>
+</div>
+<div class="tab-panel" id="panel-timeline" role="tabpanel" aria-labelledby="tab-timeline" data-tab-panel="timeline" hidden>
 <section class="timeline-section" id="timeline">
-  <div class="section-heading"><div><span class="kicker">05 / THE TIMELINE</span><h2>Every encore, in order</h2></div><p id="timeline-summary">A chronological view of the concert nights currently selected in the explorer.</p></div>
+  <div class="section-heading"><div><h2>Every encore, in order</h2></div><p id="timeline-summary">A chronological view of the concert nights currently selected in the explorer.</p></div>
   <div class="timeline" id="concert-timeline"></div>
 </section>
+</div>
 <footer><span>NICK + LIZ · ${artists.length} NAMES · COUNTLESS ENCORES</span><p>Built from our concert history ✦ Genre labels are intentionally broad.</p></footer>`;
 
 function attendeeMatches(who) {
   return activeAttendee === "All" || activeAttendee === "Both" && who === "B" ||
     activeAttendee === "Nick" && (who === "N" || who === "B") ||
     activeAttendee === "Liz" && (who === "L" || who === "B");
+}
+
+function activateTab(tabName) {
+  document.querySelectorAll("[data-tab]").forEach(tab => {
+    const isActive = tab.dataset.tab === tabName;
+    tab.classList.toggle("active", isActive);
+    tab.setAttribute("aria-selected", String(isActive));
+    tab.tabIndex = isActive ? 0 : -1;
+  });
+  document.querySelectorAll("[data-tab-panel]").forEach(panel => {
+    panel.hidden = panel.dataset.tabPanel !== tabName;
+  });
 }
 
 function renderTimeline(events) {
@@ -710,7 +735,7 @@ function renderExplorer() {
     <article class="concert-card">
       <div class="concert-date"><span>${event.year === "Unknown" ? "DATE TBD" : event.year}</span><strong>${formatDate(event.exactDate, event.approximateYearSeason)}</strong></div>
       <div class="concert-card-body">
-        <div class="concert-card-meta"><span class="event-attendance ${event.attendedBy.toLowerCase()}">${attendanceLabel[event.attendedBy]}</span><span class="event-status ${event.researchStatus === "Needs Research" ? "needs-research" : ""}">${event.researchStatus}</span></div>
+        <div class="concert-card-meta"><span class="event-attendance ${event.attendedBy.toLowerCase()}">${attendanceLabel[event.attendedBy]}</span></div>
         <h3>${event.venue}</h3><p class="concert-place">${event.location}</p>
         <div class="concert-lineup"><span>On the bill · ${event.lineup.length}</span><div>${event.lineup.map(concert => `<b>${concert.artist}</b>`).join("")}</div></div>
       </div>
@@ -742,8 +767,19 @@ function render() {
   document.querySelectorAll("[data-attendee]").forEach(btn => btn.onclick=()=>{activeAttendee=btn.dataset.attendee;render();});
   document.querySelectorAll("[data-genre]").forEach(btn => btn.onclick=()=>{activeGenre=btn.dataset.genre;render();});
 }
-document.querySelectorAll("[data-attendee-card]").forEach(btn => btn.onclick=()=>{activeAttendee=activeAttendee===btn.dataset.attendeeCard?"All":btn.dataset.attendeeCard;render();document.getElementById("roster").scrollIntoView({behavior:"smooth"});});
-document.querySelectorAll("[data-chart-genre]").forEach(btn => btn.onclick=()=>{activeGenre=btn.dataset.chartGenre;render();document.getElementById("roster").scrollIntoView({behavior:"smooth"});});
+document.querySelectorAll("[data-tab]").forEach((tab, index, tabs) => {
+  tab.onclick = () => activateTab(tab.dataset.tab);
+  tab.onkeydown = event => {
+    const keyMoves = { ArrowRight: 1, ArrowLeft: -1 };
+    if (!(event.key in keyMoves) && event.key !== "Home" && event.key !== "End") return;
+    event.preventDefault();
+    const nextIndex = event.key === "Home" ? 0 : event.key === "End" ? tabs.length - 1 : (index + keyMoves[event.key] + tabs.length) % tabs.length;
+    tabs[nextIndex].focus();
+    activateTab(tabs[nextIndex].dataset.tab);
+  };
+});
+document.querySelectorAll("[data-attendee-card]").forEach(btn => btn.onclick=()=>{activeAttendee=activeAttendee===btn.dataset.attendeeCard?"All":btn.dataset.attendeeCard;render();activateTab("artists");document.querySelector(".tab-nav").scrollIntoView({behavior:"smooth"});});
+document.querySelectorAll("[data-chart-genre]").forEach(btn => btn.onclick=()=>{activeGenre=btn.dataset.chartGenre;render();activateTab("artists");document.querySelector(".tab-nav").scrollIntoView({behavior:"smooth"});});
 document.getElementById("search").addEventListener("input", e=>{query=e.target.value;render();});
 ["year-filter", "location-filter", "venue-filter", "event-sort"].forEach(id => document.getElementById(id).addEventListener("change", event => {
   if (id === "year-filter") activeYear = event.target.value;
@@ -763,5 +799,6 @@ document.getElementById("reset-event-filters").onclick = () => {
   document.getElementById("event-sort").value = eventSort;
   renderExplorer();
 };
+activateTab("overview");
 renderExplorer();
 render();
