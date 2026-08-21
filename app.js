@@ -17,7 +17,7 @@ const artists = [
   { name: "Noah Cyrus", genre: "Pop", tags: ["Alternative pop", "Singer-songwriter"], initials: "NC" },
   { name: "Shelby Darrell", genre: "Country", tags: ["Singer-songwriter"], initials: "SD" },
   { name: "Djo", genre: "Indie & Folk", tags: ["Psychedelic pop", "Indie rock"], initials: "DJ" },
-  { name: "DNCE", genre: "Pop", tags: ["Dance pop", "Pop rock"], initials: "DN" },
+  { name: "Loud Luxury", genre: "Pop", tags: ["Dance pop", "Electronic"], initials: "LL" },
   { name: "Edgehill", genre: "Rock & Alternative", tags: ["Alternative rock"], initials: "ED" },
   { name: "Filmore", genre: "Country", tags: ["Country pop"], initials: "FI" },
   { name: "Rachel Grae", genre: "Pop", tags: ["Singer-songwriter"], initials: "RG" },
@@ -189,10 +189,10 @@ const concerts = [
     research: { status: "Confirmed", sourceUrl: "", notes: "" },
   },
   {
-    artist: "DNCE", attendedBy: "N",
-    remembered: { approximateYearSeason: "2019", venue: "College of the Holy Cross", cityArea: "Worcester", stateCountry: "MA", otherClues: "School spring concert" },
-    confirmed: { exactDate: "", venue: "College of the Holy Cross", city: "Worcester", stateCountry: "MA" },
-    research: { status: "Confirmed", sourceUrl: "", notes: "Exact date was not provided." },
+    artist: "Loud Luxury", attendedBy: "N",
+    remembered: { approximateYearSeason: "2019", venue: "Fitton Field", cityArea: "Worcester", stateCountry: "MA", otherClues: "School spring concert" },
+    confirmed: { exactDate: "2019-05-03", venue: "Fitton Field", city: "Worcester", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "Date and venue confirmed in the provided update." },
   },
   {
     artist: "Edgehill", attendedBy: "N",
@@ -359,8 +359,8 @@ const concerts = [
   {
     artist: "Cassadee Pope", attendedBy: "L",
     remembered: { approximateYearSeason: "2012–2013", venue: "MIDFLORIDA Credit Union Amphitheatre", cityArea: "East Lake-Orient Park", stateCountry: "FL", otherClues: "Opener for Rascal Flatts" },
-    confirmed: { exactDate: "", venue: "MIDFLORIDA Credit Union Amphitheatre", city: "East Lake-Orient Park", stateCountry: "FL" },
-    research: { status: "Needs Research", sourceUrl: "", notes: "Exact date remains unconfirmed." },
+    confirmed: { exactDate: "2013-06-07", venue: "MIDFLORIDA Credit Union Amphitheatre", city: "East Lake-Orient Park", stateCountry: "FL" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "Exact date confirmed in the provided update." },
   },
   {
     artist: "Post Malone", attendedBy: "B",
@@ -371,8 +371,8 @@ const concerts = [
   {
     artist: "Rascal Flatts", attendedBy: "L",
     remembered: { approximateYearSeason: "2012–2013", venue: "MIDFLORIDA Credit Union Amphitheatre", cityArea: "East Lake-Orient Park", stateCountry: "FL", otherClues: "" },
-    confirmed: { exactDate: "", venue: "MIDFLORIDA Credit Union Amphitheatre", city: "East Lake-Orient Park", stateCountry: "FL" },
-    research: { status: "Needs Research", sourceUrl: "", notes: "Exact date remains unconfirmed." },
+    confirmed: { exactDate: "2013-06-07", venue: "MIDFLORIDA Credit Union Amphitheatre", city: "East Lake-Orient Park", stateCountry: "FL" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "Exact date confirmed in the provided update." },
   },
   {
     artist: "Ethan Regan", attendedBy: "B",
@@ -418,15 +418,15 @@ const concerts = [
   },
   {
     artist: "Jay Sean", attendedBy: "N",
-    remembered: { approximateYearSeason: "2019", venue: "College of the Holy Cross", cityArea: "Worcester", stateCountry: "MA", otherClues: "School spring concert" },
-    confirmed: { exactDate: "", venue: "College of the Holy Cross", city: "Worcester", stateCountry: "MA" },
-    research: { status: "Confirmed", sourceUrl: "", notes: "Exact date was not provided." },
+    remembered: { approximateYearSeason: "2019", venue: "Fitton Field", cityArea: "Worcester", stateCountry: "MA", otherClues: "School spring concert" },
+    confirmed: { exactDate: "2019-05-03", venue: "Fitton Field", city: "Worcester", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "Date and venue confirmed in the provided update." },
   },
   {
     artist: "Set It Off", attendedBy: "L",
     remembered: { approximateYearSeason: "2013–2015", venue: "Tarpon Springs High School", cityArea: "Tarpon Springs", stateCountry: "FL", otherClues: "Hometown theater show" },
-    confirmed: { exactDate: "", venue: "Tarpon Springs High School", city: "Tarpon Springs", stateCountry: "FL" },
-    research: { status: "Needs Research", sourceUrl: "", notes: "Exact date remains unconfirmed." },
+    confirmed: { exactDate: "2013-01-01", venue: "Tarpon Springs High School", city: "Tarpon Springs", stateCountry: "FL" },
+    research: { status: "Confirmed", sourceUrl: "", notes: "Exact date confirmed in the provided update." },
   },
   {
     artist: "Nate Smith", attendedBy: "B",
@@ -649,7 +649,7 @@ document.getElementById("app").innerHTML = `
     <article><strong>${locations.length}</strong><span>locations</span></article>
   </div>
   <div class="explorer-controls" aria-label="Concert filters">
-    <label><span>Year</span><select id="year-filter"><option value="All">All years</option>${years.map(year=>`<option value="${year}">${year}</option>`).join("")}<option value="Unknown">Date unknown</option></select></label>
+    <label><span>Year</span><select id="year-filter"><option value="All">All years</option>${years.map(year=>`<option value="${year}">${year}</option>`).join("")}${concertEvents.some(event=>event.year==="Unknown")?`<option value="Unknown">Date unknown</option>`:""}</select></label>
     <label><span>Location</span><select id="location-filter"><option value="All">All locations</option>${locations.map(location=>`<option value="${location}">${location}</option>`).join("")}</select></label>
     <label><span>Venue</span><select id="venue-filter"><option value="All">All venues</option>${venues.map(venue=>`<option value="${venue}">${venue}</option>`).join("")}</select></label>
     <label><span>Sort</span><select id="event-sort"><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="venue">Venue A–Z</option></select></label>
