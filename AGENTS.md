@@ -19,7 +19,7 @@ Keep paths relative so the site continues to work from GitHub Pages. If the proj
 - `artists` supplies each artist's display name, broad genre, tags, and initials.
 - `concerts` supplies the matching artist's attendee code (`N`, `L`, or `B`), remembered details, confirmed date/location details, and optional research metadata.
 
-Every artist must have exactly one matching concert record, with the artist name matching exactly. Keep both collections in alphabetical order when adding or renaming records. The app derives `attendance` and `concertByArtist` from `concerts`, so do not add a separate attendance collection.
+Every artist must have one or more matching concert records, with the artist name matching exactly. Keep `artists` alphabetical; each additional appearance belongs in `concerts` and does not need a duplicate artist entry. The app derives grouped `concertsByArtist` and per-artist attendance facts from `concerts`, so do not add a separate attendance collection.
 
 Concert-night cards and the timeline group artist appearances when their date, venue, city, and state/country match. Add all artists from the same bill with the same confirmed location fields; use `remembered` as a fallback when an exact date or confirmed detail is unavailable. Dates use `YYYY-MM-DD` so chronological sorting remains reliable.
 
@@ -39,11 +39,11 @@ Then visit `http://localhost:8000`. Use `git diff --check` before committing to 
 
 Use two-space indentation in HTML and JavaScript. Follow the existing JavaScript style: `const` by default, `let` only for mutable UI state, camelCase identifiers, double-quoted strings, semicolons, and small focused functions. Use kebab-case for CSS classes and custom properties (for example, `.artist-card` and `--accent`). Preserve the compact CSS convention unless reformatting the whole stylesheet in a dedicated change. No formatter or linter is currently configured.
 
-Keep artist records aligned across `artists` and `concerts`; every artist name must match exactly in both collections.
+Keep artist records aligned across `artists` and `concerts`; every artist name must have at least one exact match in `concerts`, while an artist may have multiple concert records.
 
 ## Testing Guidelines
 
-Automated tests and coverage thresholds are not configured. Run `node --check app.js`, then manually verify the tab keyboard controls, artist search, genre and attendee filters, attendee-card navigation, concert year/location/venue/sort filters, clear-filters state, empty results, and timeline updates. Check responsive layouts near the existing 980 px, 720 px, and 460 px breakpoints. Confirm the browser console remains free of errors.
+Automated tests and coverage thresholds are not configured. Run `node --check app.js`, then manually verify the tab keyboard controls, artist search, genre and attendee filters, attendee-card navigation, repeated-artist counts and latest-concert details, concert year/location/venue/sort filters, clear-filters state, empty results, and timeline updates. Check responsive layouts near the existing 980 px, 720 px, and 460 px breakpoints. Confirm the browser console remains free of errors.
 
 ## Commit & Pull Request Guidelines
 

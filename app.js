@@ -531,9 +531,7 @@ const concerts = [
     research: { status: "Confirmed", sourceUrl: "", notes: "" },
   },
 ];
-const attendance = Object.fromEntries(concerts.map(concert => [concert.artist, concert.attendedBy]));
 const attendanceLabel = { N: "Nick", L: "Liz", B: "Both" };
-const concertByArtist = Object.fromEntries(concerts.map(concert => [concert.artist, concert]));
 let activeGenre = "All";
 let activeAttendee = "All";
 let query = "";
@@ -542,6 +540,69 @@ let activeLocation = "All";
 let activeVenue = "All";
 let eventSort = "newest";
 const dateFormatter = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" });
+
+function isValidIsoDate(value) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const date = new Date(`${value}T00:00:00Z`);
+  return !Number.isNaN(date.valueOf()) && date.toISOString().slice(0, 10) === value;
+}
+
+function validateConcertData() {
+  const issues = [];
+  const artistNames = new Set();
+  artists.forEach(artist => {
+    if (artistNames.has(artist.name)) issues.push(`duplicate artist roster entry: ${artist.name}`);
+    artistNames.add(artist.name);
+  });
+  concerts.forEach(concert => {
+    if (!artistNames.has(concert.artist)) issues.push(`concert artist is missing from the roster: ${concert.artist}`);
+    if (!(concert.attendedBy in attendanceLabel)) issues.push(`invalid attendee code for ${concert.artist}: ${concert.attendedBy}`);
+    if (concert.confirmed.exactDate && !isValidIsoDate(concert.confirmed.exactDate)) {
+      issues.push(`invalid exact date for ${concert.artist}: ${concert.confirmed.exactDate}`);
+    }
+  });
+  artists.forEach(artist => {
+    if (!concerts.some(concert => concert.artist === artist.name)) issues.push(`artist has no concert record: ${artist.name}`);
+  });
+  if (issues.length) console.error("Concert Passport data validation failed:\n- " + issues.join("\n- "));
+}
+
+function compareConcertAppearances(a, b) {
+  const aDate = a.confirmed.exactDate;
+  const bDate = b.confirmed.exactDate;
+  if (!aDate && !bDate) return 0;
+  if (!aDate) return 1;
+  if (!bDate) return -1;
+  return bDate.localeCompare(aDate);
+}
+
+function getArtistAttendance(appearances) {
+  return {
+    nick: appearances.some(concert => concert.attendedBy === "N" || concert.attendedBy === "B"),
+    liz: appearances.some(concert => concert.attendedBy === "L" || concert.attendedBy === "B"),
+    together: appearances.some(concert => concert.attendedBy === "B"),
+  };
+}
+
+function getArtistAttendanceDisplay(attendance) {
+  if (attendance.together) return { className: "b", label: "Both" };
+  if (attendance.nick && attendance.liz) return { className: "mixed", label: "Nick + Liz" };
+  if (attendance.nick) return { className: "n", label: "Nick" };
+  if (attendance.liz) return { className: "l", label: "Liz" };
+  return { className: "mixed", label: "Unknown" };
+}
+
+validateConcertData();
+const concertsByArtist = concerts.reduce((appearances, concert) => {
+  if (!appearances.has(concert.artist)) appearances.set(concert.artist, []);
+  appearances.get(concert.artist).push(concert);
+  return appearances;
+}, new Map());
+concertsByArtist.forEach(appearances => appearances.sort(compareConcertAppearances));
+const artistAttendance = new Map(artists.map(artist => {
+  const appearances = concertsByArtist.get(artist.name) || [];
+  return [artist.name, getArtistAttendance(appearances)];
+}));
 
 function formatDate(exactDate, approximateYearSeason = "") {
   if (!exactDate) return approximateYearSeason ? `Approx. ${approximateYearSeason}` : "Date unknown";
@@ -616,9 +677,9 @@ const counts = Object.entries(artists.reduce((acc, artist) => {
 }, {})).sort((a, b) => b[1] - a[1]);
 const countryCount = counts.find(([genre]) => genre === "Country")[1];
 const crossoverCount = artists.filter(a => a.tags.some(tag => tag.toLowerCase().includes("crossover"))).length;
-const togetherCount = artists.filter(a => attendance[a.name] === "B").length;
-const nickCount = artists.filter(a => attendance[a.name] !== "L").length;
-const lizCount = artists.filter(a => attendance[a.name] !== "N").length;
+const togetherCount = artists.filter(artist => artistAttendance.get(artist.name).together).length;
+const nickCount = artists.filter(artist => artistAttendance.get(artist.name).nick).length;
+const lizCount = artists.filter(artist => artistAttendance.get(artist.name).liz).length;
 
 document.getElementById("app").innerHTML = `
 <header class="hero">
@@ -693,10 +754,11 @@ document.getElementById("genre-filters").innerHTML = genreOptions.map(genre =>
   `<button type="button" data-genre="${genre}" aria-pressed="false">${genre}</button>`
 ).join("");
 
-function attendeeMatches(who) {
-  return activeAttendee === "All" || activeAttendee === "Both" && who === "B" ||
-    activeAttendee === "Nick" && (who === "N" || who === "B") ||
-    activeAttendee === "Liz" && (who === "L" || who === "B");
+function attendeeMatches(attendance) {
+  return activeAttendee === "All" ||
+    activeAttendee === "Both" && attendance.together ||
+    activeAttendee === "Nick" && attendance.nick ||
+    activeAttendee === "Liz" && attendance.liz;
 }
 
 function activateTab(tabName, focusActiveTab = false) {
@@ -765,20 +827,22 @@ function renderArtists() {
   const normalizedQuery = query.trim().toLowerCase();
   const filtered = artists.filter(artist => {
     const genreMatch = activeGenre === "All" || artist.genre === activeGenre;
-    const who = attendance[artist.name];
-    const concert = concertByArtist[artist.name];
-    const text = `${artist.name} ${artist.genre} ${artist.tags.join(" ")} ${attendanceLabel[who]} ${concert.confirmed.exactDate} ${concert.confirmed.venue} ${getConcertLocation(concert)}`.toLowerCase();
-    return genreMatch && attendeeMatches(who) && text.includes(normalizedQuery);
+    const appearances = concertsByArtist.get(artist.name) || [];
+    const attendance = artistAttendance.get(artist.name);
+    const text = `${artist.name} ${artist.genre} ${artist.tags.join(" ")} ${getArtistAttendanceDisplay(attendance).label} ${appearances.map(concert => `${concert.confirmed.exactDate} ${concert.confirmed.venue} ${getConcertLocation(concert)}`).join(" ")}`.toLowerCase();
+    return genreMatch && attendeeMatches(attendance) && text.includes(normalizedQuery);
   });
   document.getElementById("result-count").textContent = `${filtered.length} artist${filtered.length===1?"":"s"} showing`;
   const artistGrid = document.getElementById("artist-grid");
   artistGrid.innerHTML = filtered.map(artist => {
-    const concert = concertByArtist[artist.name];
-    const who = attendance[artist.name];
+    const appearances = concertsByArtist.get(artist.name) || [];
+    const latestConcert = appearances[0];
+    const attendance = getArtistAttendanceDisplay(artistAttendance.get(artist.name));
+    const appearanceCount = appearances.length;
     return `<article class="artist-card" style="--accent:${colors[artist.genre]}">
-      <span class="attendance-badge ${who.toLowerCase()}">${attendanceLabel[who]}</span>
+      <span class="attendance-badge ${attendance.className}">${attendance.label}</span>
       <div class="monogram">${artist.initials}</div><div><h3>${artist.name}</h3><p>${artist.genre}</p></div>
-      <div class="artist-concert"><span>${formatDate(concert.confirmed.exactDate, concert.remembered.approximateYearSeason)}</span><strong>${concert.confirmed.venue || concert.remembered.venue}</strong><small>${getConcertLocation(concert)}</small></div>
+      <div class="artist-concert"><span>${appearanceCount > 1 ? `Seen ${appearanceCount} times · ` : ""}Latest concert</span>${latestConcert ? `<strong>${formatDate(latestConcert.confirmed.exactDate, latestConcert.remembered.approximateYearSeason)}</strong><small>${latestConcert.confirmed.venue || latestConcert.remembered.venue} · ${getConcertLocation(latestConcert)}</small>` : "<strong>Concert details unavailable</strong>"}</div>
       <div class="tags">${artist.tags.map(tag=>`<span>${tag}</span>`).join("")}</div>
     </article>`;
   }).join("");
