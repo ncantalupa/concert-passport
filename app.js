@@ -83,6 +83,11 @@ const colors = {
   Country: "#ffca3a", Pop: "#ff5ea0", "Indie & Folk": "#7bdff2",
   "Rock & Alternative": "#9b8cff", "R&B & Hip-Hop": "#ff795d", Other: "#8fe0b1",
 };
+
+// Portrait files use a normalized artist name. Add an artist here when a local portrait is unavailable.
+const artistsWithoutPortraits = new Set(["Shelby Darrell"]);
+const getArtistPortrait = (name) => artistsWithoutPortraits.has(name) ? "" : `assets/artists/${name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "")}.jpg`;
+
 const concerts = [
   {
     artist: "Gracie Abrams", attendedBy: "B",
@@ -409,10 +414,10 @@ const concerts = [
     research: { status: "Confirmed", sourceUrl: "", notes: "" },
   },
   {
-    artist: "Michael Sanzone", attendedBy: "L",
-    remembered: { approximateYearSeason: "", venue: "Roadrunner", cityArea: "Boston", stateCountry: "MA", otherClues: "Opener for Alex Warren" },
-    confirmed: { exactDate: "2025-05-07", venue: "Roadrunner", city: "Boston", stateCountry: "MA" },
-    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+    artist: "Michael Sanzone", attendedBy: "B",
+    remembered: { approximateYearSeason: "", venue: "Roadrunner", cityArea: "Brighton", stateCountry: "MA", otherClues: "Opener for Alex Warren" },
+    confirmed: { exactDate: "2025-05-07", venue: "Roadrunner", city: "Brighton", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "https://www.concertarchives.org/concerts/cheaper-than-therapy-global-tour--8291548", notes: "Roadrunner is in Brighton; shared bill with Alex Warren." },
   },
   {
     artist: "Sophia Scott", attendedBy: "L",
@@ -606,6 +611,12 @@ const concerts = [
     confirmed: { exactDate: "2018-07-05", venue: "Bank of New Hampshire Pavilion", city: "Gilford", stateCountry: "NH" },
     research: { status: "Needs confirmation", sourceUrl: "https://www.banknhpavilion.com/?page=past_performances", notes: "Keith Urban and Kelsea Ballerini performed in Gilford on July 5 and 6; this record uses the first night until a ticket or photo confirms the exact date." },
   },
+  {
+    artist: "Alex Warren", attendedBy: "B",
+    remembered: { approximateYearSeason: "", venue: "Roadrunner", cityArea: "Brighton", stateCountry: "MA", otherClues: "Michael Sanzone opener" },
+    confirmed: { exactDate: "2025-05-07", venue: "Roadrunner", city: "Brighton", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "https://www.concertarchives.org/concerts/cheaper-than-therapy-global-tour--8291548", notes: "Roadrunner is in Brighton; shared bill with Michael Sanzone." },
+  },
 ];
 const attendanceLabel = { N: "Nick", L: "Liz", B: "Both" };
 let activeGenre = "All";
@@ -615,6 +626,8 @@ let activeYear = "All";
 let activeLocation = "All";
 let activeVenue = "All";
 let eventSort = "newest";
+let activeConcertAttendee = "All";
+let concertQuery = "";
 const dateFormatter = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" });
 
 function isValidIsoDate(value) {
@@ -740,11 +753,15 @@ function sortConcertEvents(events, mode) {
 }
 
 function filteredConcertEvents() {
-  return sortConcertEvents(concertEvents.filter(event =>
-    (activeYear === "All" || event.year === activeYear) &&
-    (activeLocation === "All" || event.location === activeLocation) &&
-    (activeVenue === "All" || event.venue === activeVenue)
-  ), eventSort);
+  const normalizedQuery = concertQuery.trim().toLowerCase();
+  return sortConcertEvents(concertEvents.filter(event => {
+    const text = `${formatDate(event.exactDate, event.approximateYearSeason)} ${event.exactDate} ${event.venue} ${event.location} ${event.lineup.map(concert => concert.artist).join(" ")}`.toLowerCase();
+    return (activeYear === "All" || event.year === activeYear) &&
+      (activeLocation === "All" || event.location === activeLocation) &&
+      (activeVenue === "All" || event.venue === activeVenue) &&
+      (activeConcertAttendee === "All" || event.attendedBy === activeConcertAttendee) &&
+      text.includes(normalizedQuery);
+  }), eventSort);
 }
 
 const counts = Object.entries(artists.reduce((acc, artist) => {
@@ -756,12 +773,15 @@ const crossoverCount = artists.filter(a => a.tags.some(tag => tag.toLowerCase().
 const togetherCount = artists.filter(artist => artistAttendance.get(artist.name).together).length;
 const nickCount = artists.filter(artist => artistAttendance.get(artist.name).nick).length;
 const lizCount = artists.filter(artist => artistAttendance.get(artist.name).liz).length;
+const nickConcertCount = concertEvents.filter(event => event.attendedBy === "N").length;
+const togetherConcertCount = concertEvents.filter(event => event.attendedBy === "B").length;
+const lizConcertCount = concertEvents.filter(event => event.attendedBy === "L").length;
 
 document.getElementById("app").innerHTML = `
 <header class="hero">
   <div class="hero-nav"><span class="brand"><i></i> CONCERT PASSPORT</span><span class="issue">NICK + LIZ · ${artists.length} ARTISTS</span></div>
   <div class="hero-copy"><p class="eyebrow">THE LIVE MUSIC ARCHIVE</p><h1>We were<br><em>there.</em></h1><p class="lede">From stadium country to indie basements, this is every artist we’ve seen live—mapped by the sounds that got us there.</p></div>
-  <div class="hero-numbers"><div><strong>${artists.length}</strong><span>artists seen</span></div><div><strong>${togetherCount}</strong><span>seen together</span></div><div><strong>${Math.round(togetherCount / artists.length * 100)}%</strong><span>shared lineup</span></div></div>
+  <div class="hero-numbers"><div><strong>${artists.length}</strong><span>unique artists</span></div><div><strong>${togetherCount}</strong><span>artists seen together</span></div><div><strong>${Math.round(togetherCount / artists.length * 100)}%</strong><span>artists shared</span></div></div>
   <div class="ticket-stub"><span>ADMIT TWO</span><b>N + L<br>LIVE</b><small>NO EXPIRATION</small></div>
 </header>
 <nav class="tab-nav" role="tablist" aria-label="Concert Passport sections">
@@ -772,11 +792,19 @@ document.getElementById("app").innerHTML = `
 </nav>
 <div class="tab-panel" id="panel-overview" role="tabpanel" aria-labelledby="tab-overview" data-tab-panel="overview">
 <section class="attendance-section">
-  <div class="section-heading"><div><h2>Two fans, one archive</h2></div><p>Solo favorites and shared nights, all in one place. Choose a person to filter the full artist roster.</p></div>
+  <div class="section-heading"><div><h2>Concert nights, by who was there</h2></div><p>Each count is one distinct concert night. Multiple artists on the same bill are grouped and counted once.</p></div>
+  <div class="attendance-grid concert-attendance-grid">
+    <article class="nick"><span>N</span><strong>${nickConcertCount}</strong><h3>Nick only</h3><p>concert nights without Liz</p></article>
+    <article class="both"><span>N + L</span><strong>${togetherConcertCount}</strong><h3>Together</h3><p>concert nights shared</p></article>
+    <article class="liz"><span>L</span><strong>${lizConcertCount}</strong><h3>Liz only</h3><p>concert nights without Nick</p></article>
+  </div>
+</section>
+<section class="attendance-section artist-attendance-section">
+  <div class="section-heading"><div><h2>Artists, by who saw them</h2></div><p>These are unique artist counts, not concert totals. Select a card to filter the artist roster.</p></div>
   <div class="attendance-grid">
-    <button class="nick" type="button" aria-pressed="false" data-attendee-card="Nick"><span>N</span><strong>${nickCount}</strong><h3>Nick</h3><p>${nickCount-togetherCount} solo · ${togetherCount} shared</p></button>
-    <button class="both" type="button" aria-pressed="false" data-attendee-card="Both"><span>N + L</span><strong>${togetherCount}</strong><h3>Together</h3><p>${Math.round(togetherCount/artists.length*100)}% of the full lineup</p></button>
-    <button class="liz" type="button" aria-pressed="false" data-attendee-card="Liz"><span>L</span><strong>${lizCount}</strong><h3>Liz</h3><p>${lizCount-togetherCount} solo · ${togetherCount} shared</p></button>
+    <button class="nick" type="button" aria-pressed="false" data-attendee-card="Nick"><span>N</span><strong>${nickCount}</strong><h3>Nick’s artists</h3><p>${nickCount-togetherCount} solo · ${togetherCount} shared</p></button>
+    <button class="both" type="button" aria-pressed="false" data-attendee-card="Both"><span>N + L</span><strong>${togetherCount}</strong><h3>Shared artists</h3><p>artists with at least one shared night</p></button>
+    <button class="liz" type="button" aria-pressed="false" data-attendee-card="Liz"><span>L</span><strong>${lizCount}</strong><h3>Liz’s artists</h3><p>${lizCount-togetherCount} solo · ${togetherCount} shared</p></button>
   </div>
 </section>
 <section class="genre-section">
@@ -798,8 +826,10 @@ document.getElementById("app").innerHTML = `
     <label><span>Year</span><select id="year-filter"><option value="All">All years</option>${years.map(year=>`<option value="${year}">${year}</option>`).join("")}${concertEvents.some(event=>event.year==="Unknown")?`<option value="Unknown">Date unknown</option>`:""}</select></label>
     <label><span>Location</span><select id="location-filter"><option value="All">All locations</option>${locations.map(location=>`<option value="${location}">${location}</option>`).join("")}</select></label>
     <label><span>Venue</span><select id="venue-filter"><option value="All">All venues</option>${venues.map(venue=>`<option value="${venue}">${venue}</option>`).join("")}</select></label>
+    <label><span>Attended by</span><select id="event-attendee-filter"><option value="All">Everyone</option><option value="N">Nick only</option><option value="B">Both</option><option value="L">Liz only</option></select></label>
     <label><span>Sort</span><select id="event-sort"><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="venue">Venue A–Z</option></select></label>
     <button class="reset-filters" id="reset-event-filters" type="button">Clear filters</button>
+    <label class="search concert-search"><span aria-hidden="true">⌕</span><input id="concert-search" type="search" autocomplete="off" placeholder="Search artists, venues, locations, or dates" aria-label="Search concerts"></label>
   </div>
   <div class="explorer-results"><p id="event-result-count" aria-live="polite"></p><span>Artist appearances on the same date and at the same venue are grouped together.</span></div>
   <div class="concert-grid" id="concert-grid"></div>
@@ -895,7 +925,7 @@ function renderExplorer() {
     </article>`).join("");
   concertGrid.hidden = filtered.length === 0;
   document.getElementById("event-empty").hidden = filtered.length !== 0;
-  document.getElementById("reset-event-filters").disabled = activeYear === "All" && activeLocation === "All" && activeVenue === "All" && eventSort === "newest";
+  document.getElementById("reset-event-filters").disabled = activeYear === "All" && activeLocation === "All" && activeVenue === "All" && activeConcertAttendee === "All" && eventSort === "newest" && !concertQuery;
   renderTimeline(filtered);
 }
 
@@ -915,13 +945,18 @@ function renderArtists() {
     const latestConcert = appearances[0];
     const attendance = getArtistAttendanceDisplay(artistAttendance.get(artist.name));
     const appearanceCount = appearances.length;
+    const portrait = getArtistPortrait(artist.name);
     return `<article class="artist-card" style="--accent:${colors[artist.genre]}">
       <span class="attendance-badge ${attendance.className}">${attendance.label}</span>
-      <div class="monogram">${artist.initials}</div><div><h3>${artist.name}</h3><p>${artist.genre}</p></div>
+      <div class="monogram">${portrait ? `<img class="artist-portrait" src="${portrait}" alt="" loading="lazy"><span class="monogram-fallback" hidden>${artist.initials}</span>` : artist.initials}</div><div><h3>${artist.name}</h3><p>${artist.genre}</p></div>
       <div class="artist-concert"><span>${appearanceCount > 1 ? `Seen ${appearanceCount} times · ` : ""}Latest concert</span>${latestConcert ? `<strong>${formatDate(latestConcert.confirmed.exactDate, latestConcert.remembered.approximateYearSeason)}</strong><small>${latestConcert.confirmed.venue || latestConcert.remembered.venue} · ${getConcertLocation(latestConcert)}</small>` : "<strong>Concert details unavailable</strong>"}</div>
       <div class="tags">${artist.tags.map(tag=>`<span>${tag}</span>`).join("")}</div>
     </article>`;
   }).join("");
+  artistGrid.querySelectorAll(".artist-portrait").forEach(image => image.addEventListener("error", () => {
+    image.hidden = true;
+    image.nextElementSibling.hidden = false;
+  }));
   artistGrid.hidden = filtered.length === 0;
   document.getElementById("empty").hidden = filtered.length !== 0;
   document.querySelectorAll("[data-attendee-card]").forEach(button => {
@@ -978,22 +1013,31 @@ document.getElementById("search").addEventListener("input", event => {
   query = event.target.value;
   renderArtists();
 });
-["year-filter", "location-filter", "venue-filter", "event-sort"].forEach(id => document.getElementById(id).addEventListener("change", event => {
+["year-filter", "location-filter", "venue-filter", "event-attendee-filter", "event-sort"].forEach(id => document.getElementById(id).addEventListener("change", event => {
   if (id === "year-filter") activeYear = event.target.value;
   if (id === "location-filter") activeLocation = event.target.value;
   if (id === "venue-filter") activeVenue = event.target.value;
+  if (id === "event-attendee-filter") activeConcertAttendee = event.target.value;
   if (id === "event-sort") eventSort = event.target.value;
   renderExplorer();
 }));
+document.getElementById("concert-search").addEventListener("input", event => {
+  concertQuery = event.target.value;
+  renderExplorer();
+});
 document.getElementById("reset-event-filters").onclick = () => {
   activeYear = "All";
   activeLocation = "All";
   activeVenue = "All";
+  activeConcertAttendee = "All";
   eventSort = "newest";
+  concertQuery = "";
   document.getElementById("year-filter").value = activeYear;
   document.getElementById("location-filter").value = activeLocation;
   document.getElementById("venue-filter").value = activeVenue;
+  document.getElementById("event-attendee-filter").value = activeConcertAttendee;
   document.getElementById("event-sort").value = eventSort;
+  document.getElementById("concert-search").value = concertQuery;
   renderExplorer();
 };
 activateTab("overview");

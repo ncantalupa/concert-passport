@@ -41,9 +41,11 @@ Use two-space indentation in HTML and JavaScript. Follow the existing JavaScript
 
 Keep artist records aligned across `artists` and `concerts`; every artist name must have at least one exact match in `concerts`, while an artist may have multiple concert records.
 
+Artist-card portraits live in `assets/artists/`, using each artist name normalized to lowercase letters and digits (for example, `P!nk` becomes `pnk.jpg`). When adding an artist without a local portrait, add their exact name to `artistsWithoutPortraits` in `app.js` so the initials fallback is intentional.
+
 ## Testing Guidelines
 
-Automated tests and coverage thresholds are not configured. Run `node --check app.js`, then manually verify the tab keyboard controls, artist search, genre and attendee filters, attendee-card navigation, repeated-artist counts and latest-concert details, concert year/location/venue/sort filters, clear-filters state, empty results, and timeline updates. Check responsive layouts near the existing 980 px, 720 px, and 460 px breakpoints. Confirm the browser console remains free of errors.
+Automated tests and coverage thresholds are not configured. Run `node --check app.js`, then manually verify the tab keyboard controls, artist search, genre and attendee filters, attendee-card navigation, repeated-artist counts and latest-concert details, concert search and year/location/venue/attendee/sort filters, clear-filters state, empty results, and timeline updates. Check responsive layouts near the existing 980 px, 720 px, and 460 px breakpoints. Confirm the browser console remains free of errors.
 
 ## Commit & Pull Request Guidelines
 
