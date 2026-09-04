@@ -5,6 +5,7 @@ const artists = [
   { name: "Jason Aldean", genre: "Country", tags: ["Country rock"], initials: "JA" },
   { name: "Ashe", genre: "Pop", tags: ["Indie pop", "Singer-songwriter"], initials: "AS" },
   { name: "Kelsea Ballerini", genre: "Country", tags: ["Country pop"], initials: "KB" },
+  { name: "Kellie Pickler", genre: "Country", tags: ["Country pop", "Singer-songwriter"], initials: "KP" },
   { name: "Eddie Benjamin", genre: "Pop", tags: ["Singer-songwriter"], initials: "EB" },
   { name: "Dierks Bentley", genre: "Country", tags: ["Bluegrass", "Country rock"], initials: "DB" },
   { name: "Blü Eyes", genre: "Pop", tags: ["Indie pop"], initials: "BE" },
@@ -35,6 +36,7 @@ const artists = [
   { name: "Little Big Town", genre: "Country", tags: ["Country pop", "Vocal group"], initials: "LT" },
   { name: "Dustin Lynch", genre: "Country", tags: ["Country pop"], initials: "DL" },
   { name: "Maddie & Tae", genre: "Country", tags: ["Country pop", "Duo"], initials: "MT" },
+  { name: "The Band Perry", genre: "Country", tags: ["Country pop", "Country rock", "Vocal group"], initials: "TBP" },
   { name: "The Man, The Myth, The Meatslab", genre: "Rock & Alternative", tags: ["Rock", "Local"], initials: "MM" },
   { name: "Shawn Mendes", genre: "Pop", tags: ["Pop rock", "Singer-songwriter"], initials: "SM" },
   { name: "Niko Moon", genre: "Country", tags: ["Country pop"], initials: "NM" },
@@ -125,6 +127,12 @@ const concerts = [
     remembered: { approximateYearSeason: "", venue: "TD Garden", cityArea: "Boston", stateCountry: "MA", otherClues: "" },
     confirmed: { exactDate: "2025-02-13", venue: "TD Garden", city: "Boston", stateCountry: "MA" },
     research: { status: "Confirmed", sourceUrl: "", notes: "" },
+  },
+  {
+    artist: "Kellie Pickler", attendedBy: "L",
+    remembered: { approximateYearSeason: "October 9, 2013", venue: "Ruth Eckerd Hall", cityArea: "Clearwater", stateCountry: "FL", otherClues: "" },
+    confirmed: { exactDate: "2013-10-11", venue: "Ruth Eckerd Hall", city: "Clearwater", stateCountry: "FL" },
+    research: { status: "Confirmed", sourceUrl: "https://www.concertarchives.org/bands/kellie-pickler?year=2013", notes: "The provided date was Oct. 9, but archived tour listings place the Ruth Eckerd Hall show on Oct. 11; Oct. 9 was the Stocker Arts Center date in Elyria, Ohio." },
   },
   {
     artist: "Eddie Benjamin", attendedBy: "B",
@@ -371,6 +379,12 @@ const concerts = [
     remembered: { approximateYearSeason: "2012–2013", venue: "MIDFLORIDA Credit Union Amphitheatre", cityArea: "East Lake-Orient Park", stateCountry: "FL", otherClues: "Opener for Rascal Flatts" },
     confirmed: { exactDate: "2013-06-07", venue: "MIDFLORIDA Credit Union Amphitheatre", city: "East Lake-Orient Park", stateCountry: "FL" },
     research: { status: "Confirmed", sourceUrl: "", notes: "Exact date confirmed in the provided update." },
+  },
+  {
+    artist: "The Band Perry", attendedBy: "L",
+    remembered: { approximateYearSeason: "", venue: "MIDFLORIDA Credit Union Amphitheatre", cityArea: "East Lake-Orient Park", stateCountry: "FL", otherClues: "Rascal Flatts Live & Loud Tour" },
+    confirmed: { exactDate: "2013-06-07", venue: "MIDFLORIDA Credit Union Amphitheatre", city: "East Lake-Orient Park", stateCountry: "FL" },
+    research: { status: "Confirmed", sourceUrl: "https://www.loudmemories.com/concerts/the-band-perry-at-midflorida-credit-union-amphitheatre-tampa-us-on-07-june-2013-2514954", notes: "Added to the existing Rascal Flatts and Cassadee Pope concert night." },
   },
   {
     artist: "Post Malone", attendedBy: "B",

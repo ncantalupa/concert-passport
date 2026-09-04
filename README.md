@@ -29,4 +29,9 @@ GitHub will display the published URL after deployment finishes.
 
 Edit or replace the files in the repository and commit the changes. GitHub Pages will republish automatically.
 
+## Portrait credits
+
+- Kellie Pickler: photo by U.S. Navy Petty Officer 2nd Class Aramis X. Ramirez, [public domain via Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Kellie_Pickler_2008-12-17_cropped.jpg); cropped and resized.
+- The Band Perry: photo by burningkarma, [CC BY 2.0 via Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Thebandperry_(cropped).jpg); cropped and resized.
+
 https://ncantalupa.github.io/concert-passport/
