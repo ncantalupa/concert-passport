@@ -211,9 +211,9 @@ const concerts = [
   },
   {
     artist: "Filmore", attendedBy: "L",
-    remembered: { approximateYearSeason: "", venue: "Mohegan Sun", cityArea: "Uncasville", stateCountry: "CT", otherClues: "" },
-    confirmed: { exactDate: "2021-11-13", venue: "Mohegan Sun", city: "Uncasville", stateCountry: "CT" },
-    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+    remembered: { approximateYearSeason: "", venue: "Mohegan Sun Arena", cityArea: "Uncasville", stateCountry: "CT", otherClues: "Brett Young's The Weekends Tour" },
+    confirmed: { exactDate: "2021-11-12", venue: "Mohegan Sun Arena", city: "Uncasville", stateCountry: "CT" },
+    research: { status: "Confirmed", sourceUrl: "https://www.maddieandtae.com/maddie-tae-join-brett-young-his-weekends-tour/", notes: "The official tour itinerary confirms the Nov. 12 Mohegan Sun Arena date with Brett Young, Maddie & Tae, and Filmore." },
   },
   {
     artist: "Rachel Grae", attendedBy: "B",
@@ -301,9 +301,9 @@ const concerts = [
   },
   {
     artist: "Maddie & Tae", attendedBy: "L",
-    remembered: { approximateYearSeason: "", venue: "Mohegan Sun", cityArea: "Uncasville", stateCountry: "CT", otherClues: "" },
-    confirmed: { exactDate: "2021-11-13", venue: "Mohegan Sun", city: "Uncasville", stateCountry: "CT" },
-    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+    remembered: { approximateYearSeason: "", venue: "Mohegan Sun Arena", cityArea: "Uncasville", stateCountry: "CT", otherClues: "Brett Young's The Weekends Tour" },
+    confirmed: { exactDate: "2021-11-12", venue: "Mohegan Sun Arena", city: "Uncasville", stateCountry: "CT" },
+    research: { status: "Confirmed", sourceUrl: "https://www.maddieandtae.com/maddie-tae-join-brett-young-his-weekends-tour/", notes: "The official tour itinerary confirms the Nov. 12 Mohegan Sun Arena date with Brett Young, Maddie & Tae, and Filmore." },
   },
   {
     artist: "The Man, The Myth, The Meatslab", attendedBy: "B",
@@ -511,9 +511,9 @@ const concerts = [
   },
   {
     artist: "Brett Young", attendedBy: "L",
-    remembered: { approximateYearSeason: "", venue: "Mohegan Sun", cityArea: "Uncasville", stateCountry: "CT", otherClues: "" },
-    confirmed: { exactDate: "2021-11-13", venue: "Mohegan Sun", city: "Uncasville", stateCountry: "CT" },
-    research: { status: "Confirmed", sourceUrl: "", notes: "" },
+    remembered: { approximateYearSeason: "", venue: "Mohegan Sun Arena", cityArea: "Uncasville", stateCountry: "CT", otherClues: "The Weekends Tour with Maddie & Tae and Filmore" },
+    confirmed: { exactDate: "2021-11-12", venue: "Mohegan Sun Arena", city: "Uncasville", stateCountry: "CT" },
+    research: { status: "Confirmed", sourceUrl: "https://www.maddieandtae.com/maddie-tae-join-brett-young-his-weekends-tour/", notes: "The official tour itinerary confirms the Nov. 12 Mohegan Sun Arena date with Brett Young, Maddie & Tae, and Filmore." },
   },
   {
     artist: "Bailey Zimmerman", attendedBy: "B",
@@ -616,6 +616,54 @@ const concerts = [
     remembered: { approximateYearSeason: "", venue: "Roadrunner", cityArea: "Brighton", stateCountry: "MA", otherClues: "Michael Sanzone opener" },
     confirmed: { exactDate: "2025-05-07", venue: "Roadrunner", city: "Brighton", stateCountry: "MA" },
     research: { status: "Confirmed", sourceUrl: "https://www.concertarchives.org/concerts/cheaper-than-therapy-global-tour--8291548", notes: "Roadrunner is in Brighton; shared bill with Michael Sanzone." },
+  },
+  {
+    artist: "Carrie Underwood", attendedBy: "L",
+    remembered: { approximateYearSeason: "2012, Blown Away Tour", venue: "Amway Center", cityArea: "Orlando", stateCountry: "FL", otherClues: "Hunter Hayes opener" },
+    confirmed: { exactDate: "2012-12-21", venue: "Amway Center", city: "Orlando", stateCountry: "FL" },
+    research: { status: "Confirmed", sourceUrl: "https://www.shineon-media.com/2012/05/03/hunter-hayes-to-open-for-carrie-underwoods-blown-away-tour/", notes: "The Blown Away Tour itinerary lists Carrie Underwood and Hunter Hayes at Amway Center in Orlando on Dec. 21, 2012." },
+  },
+  {
+    artist: "Hunter Hayes", attendedBy: "L",
+    remembered: { approximateYearSeason: "2012, Blown Away Tour", venue: "Amway Center", cityArea: "Orlando", stateCountry: "FL", otherClues: "Carrie Underwood headliner" },
+    confirmed: { exactDate: "2012-12-21", venue: "Amway Center", city: "Orlando", stateCountry: "FL" },
+    research: { status: "Confirmed", sourceUrl: "https://www.shineon-media.com/2012/05/03/hunter-hayes-to-open-for-carrie-underwoods-blown-away-tour/", notes: "The Blown Away Tour itinerary lists Carrie Underwood and Hunter Hayes at Amway Center in Orlando on Dec. 21, 2012." },
+  },
+  {
+    artist: "Alexandra Kay", attendedBy: "L",
+    remembered: { approximateYearSeason: "", venue: "The Intersection", cityArea: "Grand Rapids", stateCountry: "MI", otherClues: "Cupid's a Cowgirl Tour" },
+    confirmed: { exactDate: "2025-03-30", venue: "The Intersection", city: "Grand Rapids", stateCountry: "MI" },
+    research: { status: "Confirmed", sourceUrl: "https://www.pollstar.com/events/alexandra-kay-at-the-intersection-the-stache-8817850", notes: "Pollstar lists Alexandra Kay at The Intersection / The Stache in Grand Rapids on Mar. 30, 2025." },
+  },
+  {
+    artist: "Maddie & Tae", attendedBy: "L",
+    remembered: { approximateYearSeason: "", venue: "Wolf Den at Mohegan Sun", cityArea: "Uncasville", stateCountry: "CT", otherClues: "" },
+    confirmed: { exactDate: "2023-04-08", venue: "Wolf Den at Mohegan Sun", city: "Uncasville", stateCountry: "CT" },
+    research: { status: "Confirmed", sourceUrl: "https://www.concertarchives.org/bands/maddie-tae?page=8", notes: "Concert Archives lists the Apr. 8, 2023 Wolf Den at Mohegan Sun show in Uncasville." },
+  },
+  {
+    artist: "Maddie & Tae", attendedBy: "L",
+    remembered: { approximateYearSeason: "", venue: "Bernie's Beach Bar", cityArea: "Hampton Beach", stateCountry: "NH", otherClues: "" },
+    confirmed: { exactDate: "2023-07-02", venue: "Bernie's Beach Bar", city: "Hampton Beach", stateCountry: "NH" },
+    research: { status: "Confirmed", sourceUrl: "https://www.tmpresale.com/2023/04/25/maddie-taes-event-in-hampton-beach-nh-jul-2nd-2023-presale-code", notes: "The event listing confirms Bernie's Beach Bar in Hampton Beach on Jul. 2, 2023." },
+  },
+  {
+    artist: "Straight No Chaser", attendedBy: "L",
+    remembered: { approximateYearSeason: "", venue: "Ruth Eckerd Hall", cityArea: "Clearwater", stateCountry: "FL", otherClues: "" },
+    confirmed: { exactDate: "2013-11-23", venue: "Ruth Eckerd Hall", city: "Clearwater", stateCountry: "FL" },
+    research: { status: "Confirmed", sourceUrl: "https://news.pollstar.com/2013/08/30/straight-talk-from-straight-no-chaser/", notes: "The fall-tour itinerary lists Ruth Eckerd Hall in Clearwater on Nov. 23, 2013." },
+  },
+  {
+    artist: "Straight No Chaser", attendedBy: "L",
+    remembered: { approximateYearSeason: "2011", venue: "Riverside Theater", cityArea: "Milwaukee", stateCountry: "WI", otherClues: "" },
+    confirmed: { exactDate: "2011-10-29", venue: "Riverside Theater", city: "Milwaukee", stateCountry: "WI" },
+    research: { status: "Confirmed", sourceUrl: "https://www.milwaukeemag.com/Music_MayhemandMonsters/", notes: "A Milwaukee weekend listing published Oct. 27 identifies Straight No Chaser at Riverside Theater that Saturday; the 2011 tour itinerary lists Milwaukee on Oct. 29." },
+  },
+  {
+    artist: "Alana Springsteen", attendedBy: "L",
+    remembered: { approximateYearSeason: "", venue: "Brighton Music Hall", cityArea: "Brighton", stateCountry: "MA", otherClues: "Adam Doleac opener" },
+    confirmed: { exactDate: "2023-02-25", venue: "Brighton Music Hall", city: "Brighton", stateCountry: "MA" },
+    research: { status: "Confirmed", sourceUrl: "https://concertful.com/tour/adam-doleac/past?page=2", notes: "Adam Doleac's tour history lists Brighton Music Hall on Feb. 25, 2023; Alana Springsteen was the supporting artist." },
   },
 ];
 const attendanceLabel = { N: "Nick", L: "Liz", B: "Both" };
