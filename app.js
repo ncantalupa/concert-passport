@@ -80,9 +80,10 @@ const artists = [
   { name: "Cousin Stizz", genre: "R&B & Hip-Hop", tags: ["Hip-hop", "Trap"], initials: "CS" },
 ];
 const colors = {
-  Country: "#ffca3a", Pop: "#ff5ea0", "Indie & Folk": "#7bdff2",
-  "Rock & Alternative": "#9b8cff", "R&B & Hip-Hop": "#ff795d", Other: "#8fe0b1",
+  Country: "#e3c47a", Pop: "#ff526c", "Indie & Folk": "#d7dee8",
+  "Rock & Alternative": "#9da5b1", "R&B & Hip-Hop": "#d94059", Other: "#7e8794",
 };
+const genreBarColors = ["#8f1f32", "#a9273b", "#c53046", "#dd3b51", "#f04a61", "#ff6679"];
 
 // Portrait files use a normalized artist name. Add an artist here when a local portrait is unavailable.
 const artistsWithoutPortraits = new Set(["Shelby Darrell"]);
@@ -857,7 +858,7 @@ document.getElementById("app").innerHTML = `
 </section>
 <section class="genre-section">
   <div class="section-heading"><div><h2>Where the nights live</h2></div><p>Broad genre groupings based on each artist’s primary sound. The crossover tags tell the fuller story.</p></div>
-  <div class="genre-layout"><div class="genre-bars">${counts.map(([genre,count],i)=>`<button class="bar-row" type="button" aria-pressed="false" data-chart-genre="${genre}"><span class="rank">0${i+1}</span><span class="bar-label">${genre}</span><span class="bar-track"><i style="width:${count/countryCount*100}%;background:${colors[genre]}"></i></span><strong>${count}</strong></button>`).join("")}</div>
+  <div class="genre-layout"><div class="genre-bars">${counts.map(([genre,count],i)=>`<button class="bar-row" type="button" aria-pressed="false" data-chart-genre="${genre}"><span class="rank">0${i+1}</span><span class="bar-label">${genre}</span><span class="bar-track"><i style="width:${count/countryCount*100}%;background:${genreBarColors[i]}"></i></span><strong>${count}</strong></button>`).join("")}</div>
   <aside class="insight-card"><span>THE HEADLINE</span><strong>${countryCount}</strong><h3>country artists</h3><p>Country is the clear main stage, with modern country-pop, red dirt, outlaw, and roots all in the mix.</p></aside></div>
 </section>
 <section class="stats-strip"><article><span>COUNTRY CROSSOVERS</span><strong>${crossoverCount}</strong><p>artists tagged across genre lines</p></article><article><span>GROUP ENERGY</span><strong>${artists.filter(a=>a.tags.includes("Vocal group")||a.tags.includes("Duo")).length}</strong><p>duos and vocal groups</p></article><article><span>SONGWRITERS’ ROW</span><strong>${artists.filter(a=>a.tags.includes("Singer-songwriter")).length}</strong><p>singer-songwriters seen live</p></article></section>
