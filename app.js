@@ -85,7 +85,7 @@ const colors = {
   Country: "#e3c47a", Pop: "#ff526c", "Indie & Folk": "#d7dee8",
   "Rock & Alternative": "#9da5b1", "R&B & Hip-Hop": "#d94059", Other: "#7e8794",
 };
-const genreBarColors = ["#8f1f32", "#a9273b", "#c53046", "#dd3b51", "#f04a61", "#ff6679"];
+const genreBarColors = ["#ff6679", "#f04a61", "#dd3b51", "#c53046", "#a9273b", "#8f1f32"];
 
 // Portrait files use a normalized artist name. Add an artist here when a local portrait is unavailable.
 const artistsWithoutPortraits = new Set(["Shelby Darrell"]);
