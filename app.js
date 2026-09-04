@@ -870,14 +870,17 @@ document.getElementById("app").innerHTML = `
     <article><strong>${venues.length}</strong><span>venues visited</span></article>
     <article><strong>${locations.length}</strong><span>locations</span></article>
   </div>
-  <div class="explorer-controls" role="group" aria-label="Concert filters">
-    <label><span>Year</span><select id="year-filter"><option value="All">All years</option>${years.map(year=>`<option value="${year}">${year}</option>`).join("")}${concertEvents.some(event=>event.year==="Unknown")?`<option value="Unknown">Date unknown</option>`:""}</select></label>
-    <label><span>Location</span><select id="location-filter"><option value="All">All locations</option>${locations.map(location=>`<option value="${location}">${location}</option>`).join("")}</select></label>
-    <label><span>Venue</span><select id="venue-filter"><option value="All">All venues</option>${venues.map(venue=>`<option value="${venue}">${venue}</option>`).join("")}</select></label>
-    <label><span>Attended by</span><select id="event-attendee-filter"><option value="All">Everyone</option><option value="N">Nick only</option><option value="B">Both</option><option value="L">Liz only</option></select></label>
-    <label><span>Sort</span><select id="event-sort"><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="venue">Venue A–Z</option></select></label>
-    <button class="reset-filters" id="reset-event-filters" type="button">Clear filters</button>
+  <div class="explorer-controls" id="explorer-controls" role="group" aria-label="Concert filters">
     <label class="search concert-search"><span aria-hidden="true">⌕</span><input id="concert-search" type="search" autocomplete="off" placeholder="Search artists, venues, locations, or dates" aria-label="Search concerts"></label>
+    <button class="mobile-filter-toggle" id="event-filter-toggle" type="button" aria-expanded="false" aria-controls="event-filter-fields"><span>Filters</span><strong id="active-event-filter-count" hidden>0</strong><i aria-hidden="true">⌄</i></button>
+    <div class="filter-fields" id="event-filter-fields">
+      <label><span>Year</span><select id="year-filter"><option value="All">All years</option>${years.map(year=>`<option value="${year}">${year}</option>`).join("")}${concertEvents.some(event=>event.year==="Unknown")?`<option value="Unknown">Date unknown</option>`:""}</select></label>
+      <label><span>Location</span><select id="location-filter"><option value="All">All locations</option>${locations.map(location=>`<option value="${location}">${location}</option>`).join("")}</select></label>
+      <label><span>Venue</span><select id="venue-filter"><option value="All">All venues</option>${venues.map(venue=>`<option value="${venue}">${venue}</option>`).join("")}</select></label>
+      <label><span>Attended by</span><select id="event-attendee-filter"><option value="All">Everyone</option><option value="N">Nick only</option><option value="B">Both</option><option value="L">Liz only</option></select></label>
+      <label><span>Sort</span><select id="event-sort"><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="venue">Venue A–Z</option></select></label>
+      <button class="reset-filters" id="reset-event-filters" type="button">Clear filters</button>
+    </div>
   </div>
   <div class="explorer-results"><p id="event-result-count" aria-live="polite"></p><span>Artist appearances on the same date and at the same venue are grouped together.</span></div>
   <div class="concert-grid" id="concert-grid"></div>
@@ -894,6 +897,7 @@ document.getElementById("app").innerHTML = `
 <div class="tab-panel" id="panel-timeline" role="tabpanel" aria-labelledby="tab-timeline" data-tab-panel="timeline" hidden>
 <section class="timeline-section" id="timeline">
   <div class="section-heading"><div><h2>Every encore, in order</h2></div><p id="timeline-summary" aria-live="polite">A chronological view of the concert nights currently selected in the explorer.</p></div>
+  <div class="timeline-filter-state"><span id="timeline-filter-copy">Showing every concert night</span><button id="timeline-edit-filters" type="button">Filter concerts</button></div>
   <div class="timeline" id="concert-timeline"></div>
 </section>
 </div>
@@ -958,8 +962,25 @@ function renderTimeline(events) {
     : `${events.length} filtered concert night${events.length === 1 ? "" : "s"}, from newest to oldest.`;
 }
 
+function describeConcertFilters() {
+  const filters = [];
+  if (activeYear !== "All") filters.push(activeYear === "Unknown" ? "date unknown" : activeYear);
+  if (activeLocation !== "All") filters.push(activeLocation);
+  if (activeVenue !== "All") filters.push(activeVenue);
+  if (activeConcertAttendee !== "All") filters.push(attendanceLabel[activeConcertAttendee]);
+  if (concertQuery.trim()) filters.push(`“${concertQuery.trim()}”`);
+  return filters;
+}
+
+function setConcertFiltersOpen(isOpen) {
+  document.getElementById("event-filter-fields").classList.toggle("is-open", isOpen);
+  document.getElementById("event-filter-toggle").setAttribute("aria-expanded", String(isOpen));
+}
+
 function renderExplorer() {
   const filtered = filteredConcertEvents();
+  const activeFilters = describeConcertFilters();
+  const activeFilterCountValue = activeFilters.length + (eventSort === "newest" ? 0 : 1);
   document.getElementById("event-result-count").textContent = `${filtered.length} concert night${filtered.length === 1 ? "" : "s"} showing`;
   const concertGrid = document.getElementById("concert-grid");
   concertGrid.innerHTML = filtered.map(event => `
@@ -974,6 +995,13 @@ function renderExplorer() {
   concertGrid.hidden = filtered.length === 0;
   document.getElementById("event-empty").hidden = filtered.length !== 0;
   document.getElementById("reset-event-filters").disabled = activeYear === "All" && activeLocation === "All" && activeVenue === "All" && activeConcertAttendee === "All" && eventSort === "newest" && !concertQuery;
+  const activeFilterCount = document.getElementById("active-event-filter-count");
+  activeFilterCount.textContent = activeFilterCountValue;
+  activeFilterCount.hidden = activeFilterCountValue === 0;
+  document.getElementById("timeline-filter-copy").textContent = activeFilters.length
+    ? `Filtered by ${activeFilters.join(" · ")}`
+    : "Showing every concert night";
+  document.getElementById("timeline-edit-filters").textContent = activeFilters.length ? "Change filters" : "Filter concerts";
   renderTimeline(filtered);
 }
 
@@ -1073,6 +1101,14 @@ document.getElementById("concert-search").addEventListener("input", event => {
   concertQuery = event.target.value;
   renderExplorer();
 });
+document.getElementById("event-filter-toggle").onclick = event => {
+  setConcertFiltersOpen(event.currentTarget.getAttribute("aria-expanded") !== "true");
+};
+document.getElementById("timeline-edit-filters").onclick = () => {
+  activateTab("concerts", true);
+  setConcertFiltersOpen(true);
+  document.getElementById("explorer-controls").scrollIntoView({ behavior: "smooth", block: "start" });
+};
 document.getElementById("reset-event-filters").onclick = () => {
   activeYear = "All";
   activeLocation = "All";
@@ -1086,6 +1122,7 @@ document.getElementById("reset-event-filters").onclick = () => {
   document.getElementById("event-attendee-filter").value = activeConcertAttendee;
   document.getElementById("event-sort").value = eventSort;
   document.getElementById("concert-search").value = concertQuery;
+  setConcertFiltersOpen(false);
   renderExplorer();
 };
 activateTab("overview");
